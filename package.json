@@ -5,6 +5,8 @@
   "description": "",
   "author": "We Are Colony",
   "dependencies": {
-    "node-lambda": "^0.6.2"
+    "aws-sdk": "^2.1.24",
+    "node-lambda": "^0.6.2",
+    "q": "^1.4.1"
   }
 }
