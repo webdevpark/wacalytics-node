@@ -1,9 +1,10 @@
 {
-    "name": "wacalytics-node",
-    "version": "0.0.0",
-    "description": "",
-    "author": "We Are Colony",
-    "dependencies": {
-        
-    }
+  "name": "wacalytics-node",
+  "version": "0.0.0",
+  "main": "main.js",
+  "description": "",
+  "author": "We Are Colony",
+  "dependencies": {
+    "node-lambda": "^0.6.2"
+  }
 }
