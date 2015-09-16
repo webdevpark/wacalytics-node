@@ -2,7 +2,6 @@ var AWS         = require('aws-sdk'),
     zlib        = require('zlib'),
     fs          = require('fs'),
     q           = require('q'),
-
     wacalytics  = null,
     s3          = null;
 
