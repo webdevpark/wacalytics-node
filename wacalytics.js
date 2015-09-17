@@ -186,7 +186,7 @@ wacalytics = {
     readFile: function(srcBucket, srcKey) {
         var defered = q.defer();
 
-        if (process.env.AWS_ENVIRONMENT === 'production') {
+        if (process.env.AWS_LAMBDA_FUNCTION_NAME === 'wacalytics-node-production') {
             // The AWS_ENVIRONMENT global variable exists,
             // so assume we are running remotely
 
