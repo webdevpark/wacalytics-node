@@ -1,6 +1,5 @@
+/* global process */
 'use strict';
-
-/* global AWS_ENVIRONMENT */
 
 var AWS         = require('aws-sdk'),
     zlib        = require('zlib'),
