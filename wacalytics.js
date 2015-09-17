@@ -117,7 +117,8 @@ wacalytics = {
                 event[key] = fields[i];
             });
 
-            // Custom event data is encoded into the GET query string. Parse it into a "data" sub-object:
+            // Custom event data is encoded into the GET query string.
+            // Parse it into a "data" sub-object:
 
             event.data = self.parseEventData(event['cs-uri-query']);
 
@@ -249,8 +250,6 @@ wacalytics = {
         switch (record.eventName) {
             case 'ObjectCreated:Put':
                 return self.handlePut(record);
-
-                break;
             default:
                 console.log('[wacalytics] Unrecognised event "' + record.eventName + '"');
         }
