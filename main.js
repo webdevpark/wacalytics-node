@@ -1,6 +1,5 @@
-var wacalytics = require('./wacalytics');
-
-// Create DB connection ...
+var wacalytics  = require('./wacalytics'),
+    DynamoDBModel = null;
 
 exports.handler = function(event, context) {
     wacalytics.handleEvent(event)

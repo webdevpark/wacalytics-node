@@ -2,6 +2,8 @@
 'use strict';
 
 var AWS         = require('aws-sdk'),
+    marshalItem = require('dynamodb-marshaler').marshalItem,
+    dynamodb    = new AWS.DynamoDB(),
     zlib        = require('zlib'),
     fs          = require('fs'),
     q           = require('q'),
@@ -16,6 +18,37 @@ s3 = new AWS.S3();
  */
 
 wacalytics = {
+    /**
+     * putEvent
+     * @param {Event} event
+     * @return {Promise}
+     */
+
+    putEvent: function(event) {
+        var defered = q.defer(),
+            params = {
+                Item: marshalItem(event),
+                TableName: 'events'
+            };
+
+            params.Item.date = {
+                S: event.date + event.time
+            };
+
+            console.log('[wacalytics] Putting to DB...');
+
+            dynamodb.putItem(params, function(err, data) {
+                if (err) {
+                    defered.reject(err);
+
+                    return defered.promise;
+                }
+
+                defered.resolve();
+            });
+
+        return defered.promise;
+    },
 
     /**
      * writeToDb
@@ -23,29 +56,29 @@ wacalytics = {
      */
 
     writeToDb: function(events) {
+        var self = this,
+            tasks = [];
+
         console.log('[wacalytics] Writing ' + events.length + ' events to DB...');
 
-        // Write to DB ...
+        events.forEach(function(event) {
+            tasks.push(self.putEvent(event));
+        });
+
+        return q.all(tasks);
     },
 
     /**
      * parseEventData
      * @param {String} query
+     * @param {Event} event
      * @return {Object}
      *
      * Parses key-value pairs from a GET query string into an object
      */
 
-    parseEventData: function(query) {
-        var output = {},
-            pairs = [];
-
-        if (query === '-') {
-            // If the query string property is a single dash "-",
-            // there is no data, so return an empty object:
-
-            return output;
-        }
+    parseEventData: function(query, event) {
+        var pairs = [];
 
         // Split the query every "&" into an array of key-value pairs:
 
@@ -60,10 +93,8 @@ wacalytics = {
 
             // Define a new property on the output object:
 
-            output[key] = value;
+            event[key] = value;
         });
-
-        return output;
     },
 
     /**
@@ -126,7 +157,7 @@ wacalytics = {
             queryString = event['cs-uri-query'];
 
             if (queryString !== '-') {
-                event.data = self.parseEventData(queryString);
+                self.parseEventData(queryString, event);
 
                 // Push the event into the events array:
 

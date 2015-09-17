@@ -43,4 +43,4 @@ gulp.task('exec', function() {
     });
 });
 
-gulp.task('default', ['build', 'config', 'exec']);
+gulp.task('default', ['config', 'exec']);
