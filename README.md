@@ -1,6 +1,6 @@
 # WACalytics Node
 
-A lightweight node.js microservice for responding to AWS "Lambda" events when log files are added to a bucket.
+A ultra-scaleable lightweight node.js microservice for responding to AWS "Lambda" events when log files are added to a bucket. The plain-text contents of these log files are then parsed into analytics events and saved to a DB.
 
 ## Setup
 
