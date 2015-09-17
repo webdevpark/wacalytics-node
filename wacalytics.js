@@ -1,3 +1,4 @@
+/* global AWS_ENVIRONMENT */
 var AWS         = require('aws-sdk'),
     zlib        = require('zlib'),
     fs          = require('fs'),
@@ -29,6 +30,8 @@ wacalytics = {
      * parseEventData
      * @param {String} query
      * @return {Object}
+     *
+     * Parses key-value pairs from a GET query string into an object
      */
 
     parseEventData: function(query) {
@@ -36,15 +39,24 @@ wacalytics = {
             pairs = [];
 
         if (query === '-') {
+            // If the query string property is a single dash "-",
+            // there is no data, so return an empty object:
+
             return output;
         }
 
+        // Split the query every "&" into an array of key-value pairs:
+
         pairs = query.split('&');
+
+        // Iterate through the pairs and break them down into keys and value:
 
         pairs.forEach(function(pair) {
             var bits = pair.split('='),
                 key = bits[0],
                 value = bits[1];
+
+            // Define a new property on the output object:
 
             output[key] = value;
         });
@@ -56,33 +68,60 @@ wacalytics = {
      * parseLogFile
      * @param {String} logData
      * @return {Event[]}
+     *
+     * Parses the plain-text contents of the log file into
+     * "Event" objects to be saved to the DB
      */
 
     parseLogFile: function(logData) {
         var self = this,
-            rows = logData.split('\n'),
-            keys = rows[1].split(' '),
+            rows = [],
+            keys = [],
             events = [],
             event = null;
 
+        // Split the logData every line break to create an array of rows:
+
+        rows = logData.split('\n');
+
+        // The column keys are found on the 2nd row, extract
+        // and split them every "space" character:
+
+        keys = rows[1].split(' ');
+
+        // Remove the first "#Fields" item of the keys array,
+        // as we don't need this:
+
         keys.shift();
 
-        rows.shift();
-        rows.shift();
-        rows.pop();
+        // The actual logs start from row 3 and end on the penultimate line.
+        // Slice the rows into a new array to extract only the log data:
+
+        rows = rows.slice(2, rows.length - 1);
 
         console.log('[wacalytics] Found ' + rows.length + ' events');
 
         rows.forEach(function(row) {
+            // In each row, fields are seperated by "tab" characters.
+            // Split each column into a array of fields:
+
             var fields = row.split('	');
 
+            // Instantiate a new object literal to contain the event:
+
             event = {};
+
+            // Iterate through each key and assign properties to the event object by index:
 
             keys.forEach(function(key, i) {
                 event[key] = fields[i];
             });
 
+            // Custom event data is encoded into the GET query string. Parse it into a "data" sub-object:
+
             event.data = self.parseEventData(event['cs-uri-query']);
+
+            // Push the event into the events array:
 
             events.push(event);
         });
@@ -94,11 +133,12 @@ wacalytics = {
      * unzipLogFile
      * @param {Buffer} gzipBUffer
      * @return {Promise} -> {String}
+     *
+     * Unzips a gzip buffer into a plain-text string
      */
 
     unzipLogFile: function(gzipBuffer) {
-        var defered = q.defer(),
-            logData = '';
+        var defered = q.defer();
 
         zlib.unzip(gzipBuffer, function(e, buffer) {
             if (e) {
@@ -116,13 +156,18 @@ wacalytics = {
      * @param {String} srcBucket
      * @param {String} srcKey
      * @return {Promise} -> {Buffer}
+     *
+     * Reads an incoming file from S3 into a gzipped buffer. When running
+     * locally, it will read the test file in bucket/log.gz to simulate an
+     * S3 getObject
      */
 
     readFile: function(srcBucket, srcKey) {
         var defered = q.defer();
 
         if (typeof AWS_ENVIRONMENT !== 'undefined') {
-            // AWS
+            // The AWS_ENVIRONMENT global variable exists,
+            // so assume we are running remotely
 
             console.log('[wacalytics] Detected AWS environment');
 
@@ -167,6 +212,9 @@ wacalytics = {
      * handlePut
      * @param {Record} record
      * @return {Promise}
+     *
+     * handlePut manages the full lifecycle of anincoming
+     * "ObjectCreated:put" event
      */
 
     handlePut: function(record) {
@@ -190,6 +238,9 @@ wacalytics = {
      * eventBus
      * @param {Record} record
      * @return {Promise}
+     *
+     * The eventBus checks for the record's "eventName"
+     * property and delagates it to the appropriate handler method
      */
 
     eventBus: function(record) {
@@ -209,6 +260,10 @@ wacalytics = {
      * handleEvent
      * @param {Event} event
      * @return {Promise}
+     *
+     * As events come in, they enter wacalytics here. As each event
+     * contains an array of "records", we loop through them here
+     * before delagating each record them to the appropriate handler
      */
 
     handleEvent: function(event) {
