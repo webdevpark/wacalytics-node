@@ -18,8 +18,9 @@ You may now run one of the following commands from within the project directory:
 
 `$ node-lambda setup`
 
-This will create the neccessary environment files to authenticate a connection with AWS. Edit these files to the appropriate credentials.
-It will also create an "event.json" which can be used to simulate an incoming AWS lambda event.
+This will create the neccessary environment files to authenticate a connection with AWS (.env and deploy.env). Edit these files so that they contain the appropriate credentials for your AWS account. **These files are not tracked by git for security**.
+
+It will also create an "event.json" which can be used to simulate an incoming AWS lambda event. 
 
 #### run
 
