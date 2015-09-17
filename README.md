@@ -9,7 +9,7 @@ If you do not already have Node.js installed, download it from [here](https://no
 - Navigate to the directory where the wacalytics-node project has been installed
 - Run `$ npm install -g node-lambda` to install the node-lambda command line tools
 - Run `$ npm install` to will install all other project dependencies
-​
+
 ## Development Commands
 ​
 You may now run one of the following commands from within the project directory:
