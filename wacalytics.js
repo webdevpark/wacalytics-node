@@ -1,4 +1,7 @@
+'use strict';
+
 /* global AWS_ENVIRONMENT */
+
 var AWS         = require('aws-sdk'),
     zlib        = require('zlib'),
     fs          = require('fs'),
@@ -67,18 +70,19 @@ wacalytics = {
     /**
      * parseLogFile
      * @param {String} logData
+     * @param {String} srcKey
      * @return {Event[]}
      *
      * Parses the plain-text contents of the log file into
      * "Event" objects to be saved to the DB
      */
 
-    parseLogFile: function(logData) {
+    parseLogFile: function(logData, srcKey) {
         var self = this,
             rows = [],
             keys = [],
             events = [],
-            event = null;
+            offset = -1;
 
         // Split the logData every line break to create an array of rows:
 
@@ -105,11 +109,11 @@ wacalytics = {
             // In each row, fields are seperated by "tab" characters.
             // Split each column into a array of fields:
 
-            var fields = row.split('	');
+            var fields = row.split('	'),
+                event = {},
+                queryString = '';
 
             // Instantiate a new object literal to contain the event:
-
-            event = {};
 
             // Iterate through each key and assign properties to the event object by index:
 
@@ -120,12 +124,28 @@ wacalytics = {
             // Custom event data is encoded into the GET query string.
             // Parse it into a "data" sub-object:
 
-            event.data = self.parseEventData(event['cs-uri-query']);
+            queryString = event['cs-uri-query'];
 
-            // Push the event into the events array:
+            if (queryString !== '-') {
+                event.data = self.parseEventData(queryString);
 
-            events.push(event);
+                // Push the event into the events array:
+
+                events.push(event);
+            }
         });
+
+        offset = rows.length - events.length;
+
+        if (offset > 0) {
+            console.warn(
+                '[wacalytics] WARNING: There are ' +
+                offset +
+                ' invalid requests in file "' +
+                srcKey +
+                '"'
+            );
+        }
 
         return events;
     },
@@ -166,7 +186,7 @@ wacalytics = {
     readFile: function(srcBucket, srcKey) {
         var defered = q.defer();
 
-        if (typeof AWS_ENVIRONMENT !== 'undefined') {
+        if (process.env.AWS_ENVIRONMENT === 'production') {
             // The AWS_ENVIRONMENT global variable exists,
             // so assume we are running remotely
 
@@ -228,7 +248,7 @@ wacalytics = {
                 return self.unzipLogFile(buffer);
             })
             .then(function(logData) {
-                return self.parseLogFile(logData);
+                return self.parseLogFile(logData, srcKey);
             })
             .then(function(events) {
                 return self.writeToDb(events);

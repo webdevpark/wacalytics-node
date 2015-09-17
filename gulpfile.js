@@ -2,9 +2,9 @@ var gulp            = require('gulp'),
     jshint          = require('gulp-jshint'),
     stylish         = require('jshint-stylish'),
     jscs            = require('gulp-jscs'),
-    uglify          = require('gulp-uglify'),
-    sourcemaps      = require('gulp-sourcemaps'),
-    exec            = require('child_process').exec;
+    exec            = require('child_process').exec,
+    argv            = require('yargs').argv,
+    rename          = require('gulp-rename');
 
 gulp.task('code-style', function() {
     return gulp.src([
@@ -26,9 +26,21 @@ gulp.task('lint', function() {
 
 gulp.task('build', ['code-style', 'lint']);
 
-gulp.task('deploy', ['build'], function() {
-    return exec('node-lambda deploy', function (err, stdout, stderr) {
+gulp.task('config', function() {
+    var env = argv.run ? 'development' : 'production';
+
+    return gulp.src('./configs/config.env.' + env)
+        .pipe(rename('.env'))
+        .pipe(gulp.dest('./'));
+});
+
+gulp.task('exec', function() {
+    var command = argv.run ? 'run' : 'deploy';
+
+    exec('node-lambda ' + command, function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
     });
 });
+
+gulp.task('default', ['build', 'config', 'exec']);
