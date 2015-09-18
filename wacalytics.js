@@ -23,7 +23,7 @@ s3       = new AWS.S3();
  * @param {String} timeString
  * @return {Number}
  *
- * Convert the log's "date" and "time" strings into a single UNIX timestamp
+ * Convert the log's "date" and "time" strings into a single Unix timestamp
  */
 
 createTime = function(dateString, timeString) {
@@ -78,13 +78,19 @@ wacalytics = {
 
         newEvent.id = event['x-edge-request-id'];
 
-        // If "Time" and "Date" properties are present in the data object,
-        // use those, otherwise use the values provided in the log.
-
         try {
+            // If "Time" and "Date" properties are present in the data object,
+            // use those, otherwise use the values provided in the log.
+
             newEvent.time = event.data.Time || event.time,
             newEvent.date = event.data.Date || event.date,
+
+            // Generate a Unix timestamp from the date and time properties:
+
             newEvent.timeStamp = createTime(newEvent.date, newEvent.time);
+
+            // Set all other useful properties:
+
             newEvent.userAgent = event['cs(User-Agent)'];
             newEvent.ipAddress = event['c-ip'];
             newEvent.location = event['x-edge-location'];
