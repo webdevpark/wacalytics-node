@@ -3,13 +3,14 @@
 
 var AWS         = require('aws-sdk'),
     marshalItem = require('dynamodb-marshaler').marshalItem,
-    dynamodb    = new AWS.DynamoDB(),
     zlib        = require('zlib'),
     fs          = require('fs'),
     q           = require('q'),
     wacalytics  = null,
+    dynamodb    = null,
     s3          = null;
 
+dynamodb    = new AWS.DynamoDB(),
 s3 = new AWS.S3();
 
 /**
