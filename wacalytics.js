@@ -3,15 +3,57 @@
 
 var AWS         = require('aws-sdk'),
     marshalItem = require('dynamodb-marshaler').marshalItem,
+    TypedObject = require('typed-object'),
+    atob        = require('atob'),
     zlib        = require('zlib'),
     fs          = require('fs'),
     q           = require('q'),
     wacalytics  = null,
     dynamodb    = null,
-    s3          = null;
+    s3          = null,
+    eventSchema = null,
+    createTime  = null;
 
-dynamodb    = new AWS.DynamoDB(),
-s3 = new AWS.S3();
+dynamodb = new AWS.DynamoDB(),
+s3       = new AWS.S3();
+
+/**
+ * createTime
+ * @param {String} dateString
+ * @param {String} timeString
+ * @return {Number}
+ *
+ * Convert the log's "date" and "time" strings into a single UNIX timestamp
+ */
+
+createTime = function(dateString, timeString) {
+    var timeStamp = -1,
+        date = null;
+
+    dateString = dateString.replace(/-/g, '/');
+
+    date = new Date(dateString + ' ' + timeString);
+
+    timeStamp = date.getTime() / 1000;
+
+    return timeStamp;
+};
+
+/**
+ * eventSchema
+ * @schema
+ */
+
+eventSchema = {
+    id: '',
+    timeStamp: -1,
+    date: '',
+    time: '',
+    userAgent: '',
+    ipAddress: '',
+    location: '',
+    data: {}
+};
 
 /**
  * wacalytics
@@ -20,33 +62,51 @@ s3 = new AWS.S3();
 
 wacalytics = {
     /**
-     * putEvent
+     * insertEventToDb
      * @param {Event} event
      * @return {Promise}
      */
 
-    putEvent: function(event) {
+    insertEventToDb: function(event) {
         var defered = q.defer(),
-            params = {
-                Item: marshalItem(event),
-                TableName: 'events'
-            };
+            params  = null,
+            newEvent = null;
 
-            params.Item.date = {
-                S: event.date + event.time
-            };
+        // Instantiate a new "TypedObject" to enforce the schema
 
-            console.log('[wacalytics] Putting to DB...');
+        newEvent = new TypedObject(eventSchema);
 
-            dynamodb.putItem(params, function(err, data) {
-                if (err) {
-                    defered.reject(err);
+        newEvent.id = event['x-edge-request-id'];
 
-                    return defered.promise;
-                }
+        // If "Time" and "Date" properties are present in the data object,
+        // use those, otherwise use the values provided in the log.
 
-                defered.resolve();
-            });
+        newEvent.time = event.data.Time || event.time,
+        newEvent.date = event.data.Date || event.date,
+        newEvent.timeStamp = createTime(newEvent.date, newEvent.time);
+        newEvent.userAgent = event['cs(User-Agent)'];
+        newEvent.ipAddress = event['c-ip'];
+        newEvent.location = event['x-edge-location'];
+        newEvent.data = event.data;
+
+        // Convert the typed object to an object literal before marshalling:
+
+        params = {
+            Item: marshalItem(newEvent.toObject()),
+            TableName: 'events'
+        };
+
+        console.log('[wacalytics] Putting to DB...');
+
+        dynamodb.putItem(params, function(err, data) {
+            if (err) {
+                defered.reject(err);
+
+                return defered.promise;
+            }
+
+            defered.resolve();
+        });
 
         return defered.promise;
     },
@@ -63,7 +123,7 @@ wacalytics = {
         console.log('[wacalytics] Writing ' + events.length + ' events to DB...');
 
         events.forEach(function(event) {
-            tasks.push(self.putEvent(event));
+            tasks.push(self.insertEventToDb(event));
         });
 
         return q.all(tasks);
@@ -79,11 +139,18 @@ wacalytics = {
      */
 
     parseEventData: function(query, event) {
-        var pairs = [];
+        var pairs = [],
+            params = {},
+            eventJson = '',
+            eventData = {};
 
         // Split the query every "&" into an array of key-value pairs:
 
         pairs = query.split('&');
+
+        if (!pairs.length) {
+            return eventData;
+        }
 
         // Iterate through the pairs and break them down into keys and value:
 
@@ -92,10 +159,26 @@ wacalytics = {
                 key = bits[0],
                 value = bits[1];
 
-            // Define a new property on the output object:
+            // Define a new property on the params object:
 
-            event[key] = value;
+            params[key] = value;
         });
+
+        if (params.eventData) {
+            // If an "eventData" param is present, base64 decode the eventData:
+
+            eventJson = atob(params.eventData);
+
+            // Parse the JSON string into an object:
+
+            try {
+                eventData = JSON.parse(eventJson);
+            } catch(e) {
+                console.error('[wacalytics] Could not parse JSON for event log');
+            }
+        }
+
+        return eventData;
     },
 
     /**
@@ -158,7 +241,7 @@ wacalytics = {
             queryString = event['cs-uri-query'];
 
             if (queryString !== '-') {
-                self.parseEventData(queryString, event);
+                event.data = self.parseEventData(queryString, event);
 
                 // Push the event into the events array:
 
