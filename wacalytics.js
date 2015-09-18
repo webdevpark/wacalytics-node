@@ -81,13 +81,22 @@ wacalytics = {
         // If "Time" and "Date" properties are present in the data object,
         // use those, otherwise use the values provided in the log.
 
-        newEvent.time = event.data.Time || event.time,
-        newEvent.date = event.data.Date || event.date,
-        newEvent.timeStamp = createTime(newEvent.date, newEvent.time);
-        newEvent.userAgent = event['cs(User-Agent)'];
-        newEvent.ipAddress = event['c-ip'];
-        newEvent.location = event['x-edge-location'];
-        newEvent.data = event.data;
+        try {
+            newEvent.time = event.data.Time || event.time,
+            newEvent.date = event.data.Date || event.date,
+            newEvent.timeStamp = createTime(newEvent.date, newEvent.time);
+            newEvent.userAgent = event['cs(User-Agent)'];
+            newEvent.ipAddress = event['c-ip'];
+            newEvent.location = event['x-edge-location'];
+            newEvent.data = event.data;
+        } catch(e) {
+            console.warn('[wacalytics] WARNING: An event failed validation.');
+            console.error(e);
+
+            defered.resolve();
+
+            return defered.promise;
+        }
 
         // Convert the typed object to an object literal before marshalling:
 
