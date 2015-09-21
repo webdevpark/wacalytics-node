@@ -85,14 +85,18 @@ wacalytics = {
             newEvent.time = event.data.Time || event.time,
             newEvent.date = event.data.Date || event.date,
 
+            // If "UserAgent" and "IpAddress" are present in the data object,
+            // use those, otherwise use the values provided in the log.
+            
+            newEvent.userAgent = event.data.UserAgent || event['cs(User-Agent)'];
+            newEvent.ipAddress = event.data.IpAddress || event['c-ip'];
+            
             // Generate a Unix timestamp from the date and time properties:
 
             newEvent.timeStamp = createTime(newEvent.date, newEvent.time);
 
             // Set all other useful properties:
 
-            newEvent.userAgent = event['cs(User-Agent)'];
-            newEvent.ipAddress = event['c-ip'];
             newEvent.location = event['x-edge-location'];
             newEvent.data = event.data;
         } catch(e) {
