@@ -11,6 +11,7 @@ var AWS         = require('aws-sdk'),
     wacalytics  = null,
     dynamodb    = null,
     s3          = null,
+    querySchema = null,
     eventSchema = null,
     createTime  = null,
 
@@ -44,6 +45,17 @@ createTime = function(dateString, timeString) {
 };
 
 /**
+ * querySchema
+ * @schema
+ */
+
+querySchema = {
+    startTime: -1,
+    endTime: -1,
+    conditions: []
+};
+
+/**
  * eventSchema
  * @schema
  */
@@ -68,35 +80,86 @@ eventSchema = {
 wacalytics = {
     /**
      * readFromDb
+     * @param {Query} query
      * @return {Promise}
      */
 
-    readFromDb: function() {
-        var defered = q.defer(),
-            params = {
-                TableName: 'events',
-                IndexName: 'event_source-event_timeStamp-index',
-                KeyConditionExpression:
-                    'event_timeStamp > :v_startTime AND ' +
-                    'event_source = :v_source',
-                FilterExpression:
-                    'event_data.User_Email = :v_email AND ' +
-                    'event_data.Browser = :v_browser',
-                ExpressionAttributeValues: {
-                    ':v_source': {
-                        S: 'Website'
-                    },
-                    ':v_startTime': {
-                        N: '0'
-                    },
-                    ':v_email': {
-                        S: 'patrick.kunka@gmail.com'
-                    },
-                    ':v_browser': {
-                        S: 'Chrome'
-                    }
-                }
-            };
+    readFromDb: function(query) {
+        var defered                     = q.defer(),
+            filterConditionStrings      = [],
+            filterExpression            = '',
+            expressionAttributeValues   = null,
+            params                      = null,
+            condition                   = null,
+            valueObj                    = null,
+            typeIdentifier              = '',
+            sanitizedKey                = '',
+            i                           = -1;
+
+        // Populate the default, top-level expression attributes
+
+        expressionAttributeValues = {
+            ':v_source': {
+                S: 'Website'
+            },
+            ':v_startTime': {
+                N: new String(query.startTime)
+            },
+            ':v_endTime': {
+                N: new String(query.endTime)
+            }
+        };
+
+        // Parse the query conditions into an expression with attributes
+
+        for (i = 0; condition = query.conditions[i]; i++) {
+            sanitizedKey = condition.property.replace(/ /g, '');
+            valueObj = {};
+
+            switch (typeof condition.value) {
+                case 'string':
+                    typeIdentifier = 'S';
+
+                    break;
+                case 'number':
+                    typeIdentifier = 'N';
+
+                    break;
+                case 'boolean':
+                    typeIdentifier = 'B';
+
+                    break;
+            }
+
+            valueObj[typeIdentifier] = new String(condition.value);
+
+            expressionAttributeValues[':v_' + sanitizedKey] = valueObj;
+
+            // e.g. "data.User_Email = :v_User_Email"
+
+            filterConditionStrings.push(
+                'data.' + sanitizedKey + ' ' + condition.operator + ' ' + ':v_' + sanitizedKey
+            );
+        }
+
+        // Join all the condition strings into a single string with "AND" seperators
+
+        // e.g. "data.User_Email = v:_User_Email AND data.Interaction_Type = v:_Interaction_Type"
+
+        filterExpression = filterConditionStrings.join(' AND ');
+
+        // Create the params object with the constructed values
+
+        params = {
+            TableName: 'events',
+            IndexName: 'event_source-event_timeStamp-index', // index neccessary for secondary key queries
+            KeyConditionExpression: // Top-level conditions
+                'event_timeStamp >= :v_startTime AND ' +
+                'event_timeStamp <= :v_endTime AND ' +
+                'event_source = :v_source',
+            FilterExpression: filterExpression, // Nested conditions
+            ExpressionAttributeValues: expressionAttributeValues // All attributes
+        };
 
         console.log('[wacalytics] Querying DB...');
 
@@ -483,9 +546,32 @@ wacalytics = {
                 // return self.writeToDb(events);
             })
             .then(function() {
+                var query = new TypedObject(querySchema);
+
                 console.log('[wacalytics] DB writes done in ' + (Date.now() - startTime) + 'ms');
 
-                return self.readFromDb();
+                startTime = Date.now();
+
+                query.startTime     = 0;
+                query.endTime       = 9999999999;
+
+                query.conditions = [
+                    {
+                        property: 'Interaction Type',
+                        operator: '=',
+                        value: 'Signed In'
+                    },
+                    {
+                        property: 'Browser',
+                        operator: '=',
+                        value: 'Chrome'
+                    }
+                ];
+
+                return self.readFromDb(query);
+            })
+            .then(function() {
+                console.log('[wacalytics] DB read done in ' + (Date.now() - startTime) + 'ms');
             });
     },
 
