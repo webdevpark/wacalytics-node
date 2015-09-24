@@ -87,10 +87,10 @@ wacalytics = {
 
             // If "UserAgent" and "IpAddress" are present in the data object,
             // use those, otherwise use the values provided in the log.
-            
+
             newEvent.userAgent = event.data.UserAgent || event['cs(User-Agent)'];
             newEvent.ipAddress = event.data.IpAddress || event['c-ip'];
-            
+
             // Generate a Unix timestamp from the date and time properties:
 
             newEvent.timeStamp = createTime(newEvent.date, newEvent.time);
@@ -114,8 +114,6 @@ wacalytics = {
             Item: marshalItem(newEvent.toObject()),
             TableName: 'events'
         };
-
-        console.log('[wacalytics] Putting to DB...');
 
         dynamodb.putItem(params, function(err, data) {
             if (err) {
@@ -350,7 +348,7 @@ wacalytics = {
 
             console.log('[wacalytics] Detected local dev environment');
 
-            fs.readFile('bucket/log.gz', function (e, buffer) {
+            fs.readFile('bucket/reallivedata.gz', function (e, buffer) {
                 if (e) {
                     defered.reject(e);
                 }
