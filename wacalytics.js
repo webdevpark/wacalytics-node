@@ -2,7 +2,7 @@
 'use strict';
 
 var AWS         = require('aws-sdk'),
-    marshalItem = require('dynamodb-marshaler').marshalItem,
+    marshaler   = require('dynamodb-marshaler'),
     TypedObject = require('typed-object'),
     atob        = require('atob'),
     zlib        = require('zlib'),
@@ -12,9 +12,13 @@ var AWS         = require('aws-sdk'),
     dynamodb    = null,
     s3          = null,
     eventSchema = null,
-    createTime  = null;
+    createTime  = null,
 
-dynamodb = new AWS.DynamoDB(),
+    LOG_PATH    = 'bucket/reallivedata.gz';
+
+dynamodb = new AWS.DynamoDB({
+    apiVersion: '2012-08-10'
+}),
 s3       = new AWS.S3();
 
 /**
@@ -45,14 +49,15 @@ createTime = function(dateString, timeString) {
  */
 
 eventSchema = {
-    id: '',
-    timeStamp: -1,
-    date: '',
-    time: '',
-    userAgent: '',
-    ipAddress: '',
-    location: '',
-    data: {}
+    event_source: 'Website',
+    event_id: '',
+    event_timeStamp: -1,
+    event_date: '',
+    event_time: '',
+    event_userAgent: '',
+    event_ipAddress: '',
+    event_location: '',
+    event_data: {}
 };
 
 /**
@@ -62,12 +67,71 @@ eventSchema = {
 
 wacalytics = {
     /**
-     * insertEventToDb
-     * @param {Event} event
+     * readFromDb
      * @return {Promise}
      */
 
-    insertEventToDb: function(event) {
+    readFromDb: function() {
+        var defered = q.defer(),
+            params = {
+                TableName: 'events',
+                IndexName: 'event_source-event_timeStamp-index',
+                KeyConditionExpression:
+                    'event_timeStamp > :v_startTime AND ' +
+                    'event_source = :v_source',
+                FilterExpression:
+                    'event_data.User_Email = :v_email AND ' +
+                    'event_data.Browser = :v_browser',
+                ExpressionAttributeValues: {
+                    ':v_source': {
+                        S: 'Website'
+                    },
+                    ':v_startTime': {
+                        N: '0'
+                    },
+                    ':v_email': {
+                        S: 'patrick.kunka@gmail.com'
+                    },
+                    ':v_browser': {
+                        S: 'Chrome'
+                    }
+                }
+            };
+
+        console.log('[wacalytics] Querying DB...');
+
+        dynamodb.query(params, function(err, data) {
+            var items = [];
+
+            if (err) {
+                defered.reject(err);
+            }
+
+            if (!data) {
+                console.log('[wacalytics] No items found');
+            } else {
+                items = data.Items.map(marshaler.unmarshalItem);
+
+                console.log('[wacalytics] ' + data.Count + ' items found');
+
+                console.log(items[0]);
+            }
+
+            defered.resolve();
+        });
+
+        return defered.promise;
+    },
+
+    /**
+     * insertEventToDb
+     * @param {Event} event
+     * @param {Number} index
+     * @param {Object} progress
+     * @return {Promise}
+     */
+
+    insertEventToDb: function(event, index, progress) {
         var defered = q.defer(),
             params  = null,
             newEvent = null;
@@ -76,29 +140,29 @@ wacalytics = {
 
         newEvent = new TypedObject(eventSchema);
 
-        newEvent.id = event['x-edge-request-id'];
+        newEvent.event_id = event['x-edge-request-id'];
 
         try {
             // If "Time" and "Date" properties are present in the data object,
             // use those, otherwise use the values provided in the log.
 
-            newEvent.time = event.data.Time || event.time,
-            newEvent.date = event.data.Date || event.date,
+            newEvent.event_time = event.data.Time || event.time,
+            newEvent.event_date = event.data.Date || event.date,
 
             // If "UserAgent" and "IpAddress" are present in the data object,
             // use those, otherwise use the values provided in the log.
 
-            newEvent.userAgent = event.data.UserAgent || event['cs(User-Agent)'];
-            newEvent.ipAddress = event.data.IpAddress || event['c-ip'];
+            newEvent.event_userAgent = event.data.UserAgent || event['cs(User-Agent)'];
+            newEvent.event_ipAddress = event.data.IpAddress || event['c-ip'];
 
             // Generate a Unix timestamp from the date and time properties:
 
-            newEvent.timeStamp = createTime(newEvent.date, newEvent.time);
+            newEvent.event_timeStamp = createTime(newEvent.event_date, newEvent.event_time);
 
             // Set all other useful properties:
 
-            newEvent.location = event['x-edge-location'];
-            newEvent.data = event.data;
+            newEvent.event_location = event['x-edge-location'];
+            newEvent.event_data = event.data;
         } catch(e) {
             console.warn('[wacalytics] WARNING: An event failed validation.');
             console.error(e);
@@ -111,7 +175,7 @@ wacalytics = {
         // Convert the typed object to an object literal before marshalling:
 
         params = {
-            Item: marshalItem(newEvent.toObject()),
+            Item: marshaler.marshalItem(newEvent.toObject()),
             TableName: 'events'
         };
 
@@ -121,6 +185,11 @@ wacalytics = {
 
                 return defered.promise;
             }
+
+            progress.completed++;
+
+            // console.log('[wacalytics] Event ' + progress.completed +
+            // '/' + progress.total + ' added to DB');
 
             defered.resolve();
         });
@@ -135,12 +204,16 @@ wacalytics = {
 
     writeToDb: function(events) {
         var self = this,
-            tasks = [];
+            tasks = [],
+            progress = {
+                total: events.length,
+                completed: 0
+            };
 
         console.log('[wacalytics] Writing ' + events.length + ' events to DB...');
 
-        events.forEach(function(event) {
-            tasks.push(self.insertEventToDb(event));
+        events.forEach(function(event, i) {
+            tasks.push(self.insertEventToDb(event, i, progress));
         });
 
         return q.all(tasks);
@@ -159,7 +232,10 @@ wacalytics = {
         var pairs = [],
             params = {},
             eventJson = '',
-            eventData = {};
+            eventData = {},
+            sanitizedEventData = {},
+            sanitizedKey = '',
+            key = '';
 
         // Split the query every "&" into an array of key-value pairs:
 
@@ -190,12 +266,21 @@ wacalytics = {
 
             try {
                 eventData = JSON.parse(eventJson);
+
+                for (key in eventData) {
+                    // Replace all spaces in data keys with underscores
+                    // for DynamoDB query compatibility
+
+                    sanitizedKey = key.replace(/ /g, '_');
+
+                    sanitizedEventData[sanitizedKey] = eventData[key];
+                }
             } catch(e) {
                 console.error('[wacalytics] Could not parse JSON for event log');
             }
         }
 
-        return eventData;
+        return sanitizedEventData;
     },
 
     /**
@@ -348,7 +433,7 @@ wacalytics = {
 
             console.log('[wacalytics] Detected local dev environment');
 
-            fs.readFile('bucket/reallivedata.gz', function (e, buffer) {
+            fs.readFile(LOG_PATH, function (e, buffer) {
                 if (e) {
                     defered.reject(e);
                 }
@@ -372,17 +457,35 @@ wacalytics = {
     handlePut: function(record) {
         var self        = this,
             srcBucket   = record.s3.bucket.name,
-            srcKey      = decodeURIComponent(record.s3.object.key.replace(/\+/g, ' '));
+            srcKey      = decodeURIComponent(record.s3.object.key.replace(/\+/g, ' ')),
+            startTime   = Date.now();
 
         return self.readFile(srcBucket, srcKey)
             .then(function(buffer) {
+                console.log('[wacalytics] File read in ' + (Date.now() - startTime) + 'ms');
+
+                startTime = Date.now();
+
                 return self.unzipLogFile(buffer);
             })
             .then(function(logData) {
+                console.log('[wacalytics] Log unzipped in ' + (Date.now() - startTime) + 'ms');
+
+                startTime = Date.now();
+
                 return self.parseLogFile(logData, srcKey);
             })
             .then(function(events) {
-                return self.writeToDb(events);
+                console.log('[wacalytics] Log parsed in ' + (Date.now() - startTime) + 'ms');
+
+                startTime = Date.now();
+
+                // return self.writeToDb(events);
+            })
+            .then(function() {
+                console.log('[wacalytics] DB writes done in ' + (Date.now() - startTime) + 'ms');
+
+                return self.readFromDb();
             });
     },
 
@@ -400,6 +503,8 @@ wacalytics = {
 
         switch (record.eventName) {
             case 'ObjectCreated:Put':
+                console.log('[wacalytics] Incoming "ObjectCreated:Put" event');
+
                 return self.handlePut(record);
             default:
                 console.log('[wacalytics] Unrecognised event "' + record.eventName + '"');

@@ -11,12 +11,12 @@
         "object": {
           "eTag": "0123456789abcdef0123456789abcdef",
           "sequencer": "0A1B2C3D4E5F678901",
-          "key": "log.gz",
+          "key": "E2DSWMQ6X8DMFZ.2015-09-22-09.1f5ae5ec.gz",
           "size": 1024
         },
         "bucket": {
-          "arn": "arn:aws:s3:::wac-test-source",
-          "name": "wac-test-source",
+          "arn": "arn:aws:s3:::wacalytics-logs-stage",
+          "name": "wacalytics-logs-stage",
           "ownerIdentity": {
             "principalId": "EXAMPLE"
           }
