@@ -8,19 +8,15 @@ var AWS         = require('aws-sdk'),
     zlib        = require('zlib'),
     fs          = require('fs'),
     q           = require('q'),
-    wacalytics  = null,
+
+    eventSchema = require('../schemas/event-schema'),
+
+    wacCreate     = null,
     dynamodb    = null,
     s3          = null,
-    querySchema = null,
-    eventSchema = null,
     createTime  = null,
 
     LOG_PATH    = 'bucket/reallivedata.gz';
-
-dynamodb = new AWS.DynamoDB({
-    apiVersion: '2012-08-10'
-}),
-s3       = new AWS.S3();
 
 /**
  * createTime
@@ -45,205 +41,23 @@ createTime = function(dateString, timeString) {
 };
 
 /**
- * querySchema
- * @schema
+ * wacCreate
  */
 
-querySchema = {
-    startTime: -1,
-    endTime: -1,
-    conditions: []
-};
-
-/**
- * eventSchema
- * @schema
- */
-
-eventSchema = {
-    event_source: 'Website',
-    event_id: '',
-    event_timeStamp: -1,
-    event_date: '',
-    event_time: '',
-    event_userAgent: '',
-    event_ipAddress: '',
-    event_location: '',
-    event_data: {}
-};
-
-/**
- * wacalytics
- * @singleton
- */
-
-wacalytics = {
-    /**
-     * buildDynamoQuery
-     * @param {Query} query
-     * @return {Object}
-     */
-
-    buildDynamoQuery: function(query) {
-        var filterConditionStrings      = [],
-            filterExpression            = '',
-            expressionAttributeValues   = null,
-            params                      = null,
-            condition                   = null,
-            valueObj                    = null,
-            typeIdentifier              = '',
-            sanitizedKey                = '',
-            sanitizedVar                = '',
-            i                           = -1;
-
-        // Populate the default, top-level expression attributes
-
-        expressionAttributeValues = {
-            ':v_source': {
-                S: 'Website'
-            },
-            ':v_startTime': {
-                N: query.startTime.toString()
-            },
-            ':v_endTime': {
-                N: query.endTime.toString()
-            }
-        };
-
-        // Parse the query conditions into an expression with attributes
-
-        for (i = 0; condition = query.conditions[i]; i++) {
-            sanitizedVar = ':v_' + condition.property.replace(/ /g, '_'),
-            sanitizedKey = 'event_data.' + condition.property.replace(/ /g, '_'),
-            valueObj = {};
-
-            switch (typeof condition.value) {
-                case 'string':
-                    typeIdentifier = 'S';
-
-                    break;
-                case 'number':
-                    typeIdentifier = 'N';
-
-                    break;
-                case 'boolean':
-                    typeIdentifier = 'B';
-
-                    break;
-            }
-
-            if (condition.value) {
-                valueObj[typeIdentifier] = condition.value.toString();
-            }
-
-            switch (condition.operator.toLowerCase()) {
-                case 'exists':
-                    // e.g. "attribute_exists (data.Errors)"
-
-                    filterConditionStrings.push(
-                        'attribute_exists (' + sanitizedKey + ')'
-                    );
-
-                    break;
-                case 'not_exists':
-                    // e.g. "attribute_not_exists (data.Errors)"
-
-                    filterConditionStrings.push(
-                        'attribute_not_exists (' + sanitizedKey + ')'
-                    );
-
-                    break;
-                case 'contains':
-                    expressionAttributeValues[sanitizedVar + '_substring'] = valueObj;
-
-                    // e.g. "contains (data.User_Email, :v_data.User_Email-substring)"
-
-                    filterConditionStrings.push(
-                        'contains (' + sanitizedKey + ', ' + sanitizedVar + '_substring)'
-                    );
-
-                    break;
-                default:
-                    // All other operators: '=', '<>', '<', '>', '<=', '>='
-
-                    expressionAttributeValues[sanitizedVar] = valueObj;
-
-                    // e.g. "data.User_Email = :v_data.User_Email"
-
-                    filterConditionStrings.push(
-                        sanitizedKey + ' ' + condition.operator + ' ' + sanitizedVar
-                    );
-            }
-        }
-
-        // Join all the condition strings into a single string with "AND" seperators
-
-        // e.g. "data.User_Email = v:_data.User_Email AND data.Interaction_Type = v:_data.Interaction_Type"
-
-        filterExpression = filterConditionStrings.join(' AND ');
-
-        // Create the params object with the constructed values
-
-        params = {
-            TableName: 'events',
-            IndexName: 'event_source-event_timeStamp-index', // index neccessary for secondary key queries
-            KeyConditionExpression: // Top-level conditions
-                '(event_timeStamp BETWEEN :v_startTime AND :v_endTime) AND ' +
-                'event_source = :v_source',
-            FilterExpression: filterExpression, // Nested conditions
-            ExpressionAttributeValues: expressionAttributeValues // All attributes
-        };
-
-        return params;
-    },
+wacCreate = {
 
     /**
-     * readFromDb
-     * @param {Query} query
-     * @return {Promise}
-     */
-
-    readFromDb: function(query) {
-        var self = this,
-            defered = q.defer(),
-            params = self.buildDynamoQuery(query);
-
-        console.log('[wacalytics] Querying DB...');
-
-        console.log(params.FilterExpression);
-
-        dynamodb.query(params, function(err, data) {
-            var items = [];
-
-            if (err) {
-                defered.reject(err);
-            }
-
-            if (!data) {
-                console.log('[wacalytics] No items found');
-            } else {
-                items = data.Items.map(marshaler.unmarshalItem);
-
-                console.log('[wacalytics] ' + data.Count + ' items found');
-
-                // console.log(items[0]);
-            }
-
-            defered.resolve();
-        });
-
-        return defered.promise;
-    },
-
-    /**
-     * insertEventToDb
+     * insertBatchToDb
      * @param {Event[]} eventBatch
      * @param {Number} index
      * @param {Object} progress
      * @return {Promise}
+     *
+     * Creates and writes batches of 25 events to the DB using "batchWriteItem"
+     * to reduce throughput and the overall duration
      */
 
-    insertEventToDb: function(eventBatch, index, progress) {
+    insertBatchToDb: function(eventBatch, index, progress) {
         var defered = q.defer(),
             params  = null,
             newEvent = null,
@@ -306,7 +120,7 @@ wacalytics = {
                 newEvent.event_location = event['x-edge-location'];
                 newEvent.event_data = event.data;
             } catch(e) {
-                console.warn('[wacalytics] WARNING: An event failed validation.');
+                console.warn('[wacalytics] WARNING: An event failed validation');
                 console.error(e);
 
                 defered.resolve();
@@ -385,7 +199,7 @@ wacalytics = {
         };
 
         batches.forEach(function(eventBatch, i) {
-            tasks.push(self.insertEventToDb(eventBatch, i, progress));
+            tasks.push(self.insertBatchToDb(eventBatch, i, progress));
         });
 
         return q.all(tasks);
@@ -497,7 +311,7 @@ wacalytics = {
             // In each row, fields are seperated by "tab" characters.
             // Split each column into a array of fields:
 
-            var fields = row.split('	'),
+            var fields = row.split('    '),
                 event = {},
                 queryString = '';
 
@@ -618,7 +432,7 @@ wacalytics = {
     },
 
     /**
-     * handlePut
+     * init
      * @param {Record} record
      * @return {Promise}
      *
@@ -626,11 +440,18 @@ wacalytics = {
      * "ObjectCreated:put" event
      */
 
-    handlePut: function(record) {
+    init: function(record) {
         var self        = this,
             srcBucket   = record.s3.bucket.name,
             srcKey      = decodeURIComponent(record.s3.object.key.replace(/\+/g, ' ')),
             startTime   = Date.now();
+
+        // Init S3 APIs
+
+        s3       = new AWS.S3();
+        dynamodb = new AWS.DynamoDB({
+            apiVersion: '2012-08-10'
+        });
 
         return self.readFile(srcBucket, srcKey)
             .then(function(buffer) {
@@ -652,91 +473,12 @@ wacalytics = {
 
                 startTime = Date.now();
 
-                // return self.writeToDb(events);
+                return self.writeToDb(events);
             })
             .then(function() {
-                var query = new TypedObject(querySchema);
-
                 console.log('[wacalytics] DB writes done in ' + (Date.now() - startTime) + 'ms');
-
-                startTime = Date.now();
-
-                // An example query:
-
-                query.startTime     = 0;
-                query.endTime       = 9999999999;
-
-                query.conditions = [
-                    {
-                        property: 'Interaction Type',
-                        operator: '=',
-                        value: 'Signed In'
-                    },
-                    {
-                        property: 'Browser',
-                        operator: '=',
-                        value: 'Chrome'
-                    },
-                    {
-                        property: 'User Email',
-                        operator: 'contains',
-                        value: '@wearecolony.com'
-                    }
-                    // {
-                    //     property: 'Errors',
-                    //     operator: 'exists'
-                    // }
-                ];
-
-                return self.readFromDb(query);
-            })
-            .then(function() {
-                console.log('[wacalytics] DB read done in ' + (Date.now() - startTime) + 'ms');
             });
-    },
-
-    /**
-     * eventBus
-     * @param {Record} record
-     * @return {Promise}
-     *
-     * The eventBus checks for the record's "eventName"
-     * property and delagates it to the appropriate handler method
-     */
-
-    eventBus: function(record) {
-        var self = this;
-
-        switch (record.eventName) {
-            case 'ObjectCreated:Put':
-                console.log('[wacalytics] Incoming "ObjectCreated:Put" event');
-
-                return self.handlePut(record);
-            default:
-                console.log('[wacalytics] Unrecognised event "' + record.eventName + '"');
-        }
-    },
-
-    /**
-     * handleEvent
-     * @param {Event} event
-     * @return {Promise}
-     *
-     * As events come in, they enter wacalytics here. As each event
-     * contains an array of "records", we loop through them here
-     * before delagating each record them to the appropriate handler
-     */
-
-    handleEvent: function(event) {
-        var self    = this,
-            tasks   = [];
-
-        event.Records.forEach(function(event) {
-            tasks.push(self.eventBus(event));
-        });
-
-        return q.all(tasks);
     }
 };
 
-module.exports = wacalytics;
+module.exports = wacCreate;

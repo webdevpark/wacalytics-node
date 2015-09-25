@@ -8,7 +8,9 @@ var gulp            = require('gulp'),
 
 gulp.task('code-style', function() {
     return gulp.src([
-        './*.js'
+        './*.js',
+        './app/*.js',
+        './schemas/*.js'
     ])
         .pipe(jscs({
             configPath: '.jscsrc'
@@ -17,7 +19,9 @@ gulp.task('code-style', function() {
 
 gulp.task('lint', function() {
     return gulp.src([
-        './*.js'
+        './*.js',
+        './app/*.js',
+        './schemas/*.js'
     ])
         .pipe(jshint('./.jshintrc'))
         .pipe(jshint.reporter(stylish))
