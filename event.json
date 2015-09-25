@@ -1,6 +1,4 @@
 {
     "method": "GET",
-    "queryParams": {
-        "query": "%7B%22startTime%22:0,%22endTime%22:9999999999,%22conditions%22:%5B%7B%22property%22:%22Email%22,%22operator%22:%22contains%22,%22value%22:%22@wearecolony.com%22%7D%5D%7D"
-    }
+    "query": "eyJzdGFydFRpbWUiOjAsImVuZFRpbWUiOjk5OTk5OTk5OTksImNvbmRpdGlvbnMiOlt7InByb3BlcnR5IjoiSW50ZXJhY3Rpb24gVHlwZSIsIm9wZXJhdG9yIjoiPSIsInZhbHVlIjoiU2lnbmVkIEluIn0seyJwcm9wZXJ0eSI6IkJyb3dzZXIiLCJvcGVyYXRvciI6Ij0iLCJ2YWx1ZSI6IkNocm9tZSJ9LHsicHJvcGVydHkiOiJVc2VyIEVtYWlsIiwib3BlcmF0b3IiOiJjb250YWlucyIsInZhbHVlIjoiQHdlYXJlY29sb255LmNvbSJ9XX0="
 }

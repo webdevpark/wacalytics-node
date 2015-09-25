@@ -3,6 +3,7 @@
 var AWS             = require('aws-sdk'),
     marshaler       = require('dynamodb-marshaler'),
     TypedObject     = require('typed-object'),
+    atob            = require('atob'),
     q               = require('q'),
 
     querySchema     = require('../schemas/query-schema'),
@@ -243,30 +244,40 @@ wacRead = {
      * @return {Promise}
      */
 
-    init: function(json) {
+    init: function(base64) {
         var self            = this,
+            defered         = q.defer(),
             params          = null,
             totalMatching   = -1,
             startTime       = Date.now(),
+            json            = '',
             query           = null,
             newQuery        = new TypedObject(querySchema),
-            response        = null;
-
-        try {
-            query = JSON.parse(json);
-        } catch(e) {
-            console.error('[wacalytics-read] The provided query paramter could not be parsed');
-
-            query = {};
-        }
-
-        response = new TypedObject(responseSchema);
+            response        = new TypedObject(responseSchema);
 
         // Init S3 APIs
 
         dynamodb = new AWS.DynamoDB({
             apiVersion: '2012-08-10'
         });
+
+        // Attempt to decode query
+
+        try {
+            json = atob(base64);
+            query = JSON.parse(json);
+        } catch(e) {
+            console.warn('[wacalytics-read] The provided query parameter could not be parsed:', base64);
+            console.error(e);
+
+            response.errors.push(e);
+
+            defered.resolve(response.toObject());
+
+            return defered.promise;
+        }
+
+        // Build query object
 
         try {
             newQuery.startTime      = query.startTime || 0;
@@ -282,8 +293,7 @@ wacRead = {
             throw e;
         }
 
-        // Convert TypedObject to a normal object
-        // before builder query
+        // Generate DynamoDB query params from query
 
         params = self.buildDynamoQuery(newQuery.toObject());
 
@@ -320,6 +330,8 @@ wacRead = {
                 response.errors.push(e);
 
                 console.error(e.stack);
+
+                return response.toObject();
             });
     }
 };
