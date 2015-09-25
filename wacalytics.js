@@ -79,14 +79,13 @@ eventSchema = {
 
 wacalytics = {
     /**
-     * readFromDb
+     * buildDynamoQuery
      * @param {Query} query
-     * @return {Promise}
+     * @return {Object}
      */
 
-    readFromDb: function(query) {
-        var defered                     = q.defer(),
-            filterConditionStrings      = [],
+    buildDynamoQuery: function(query) {
+        var filterConditionStrings      = [],
             filterExpression            = '',
             expressionAttributeValues   = null,
             params                      = null,
@@ -113,7 +112,7 @@ wacalytics = {
         // Parse the query conditions into an expression with attributes
 
         for (i = 0; condition = query.conditions[i]; i++) {
-            sanitizedKey = condition.property.replace(/ /g, '');
+            sanitizedKey = 'data.' + condition.property.replace(/ /g, '');
             valueObj = {};
 
             switch (typeof condition.value) {
@@ -131,20 +130,53 @@ wacalytics = {
                     break;
             }
 
-            valueObj[typeIdentifier] = new String(condition.value);
+            if (condition.value) {
+                valueObj[typeIdentifier] = new String(condition.value);
+            }
 
-            expressionAttributeValues[':v_' + sanitizedKey] = valueObj;
+            switch (typeof condition.operator.toLowerCase()) {
+                case 'exists':
+                    // e.g. "attribute_exists (data.Errors)"
 
-            // e.g. "data.User_Email = :v_User_Email"
+                    filterConditionStrings.push(
+                        'attribute_exists (' + sanitizedKey + ')'
+                    );
 
-            filterConditionStrings.push(
-                'data.' + sanitizedKey + ' ' + condition.operator + ' ' + ':v_' + sanitizedKey
-            );
+                    break;
+                case 'not_exists':
+                    // e.g. "attribute_not_exists (data.Errors)"
+
+                    filterConditionStrings.push(
+                        'attribute_not_exists (' + sanitizedKey + ')'
+                    );
+
+                    break;
+                case 'contains':
+                    expressionAttributeValues[':v_' + sanitizedKey + '-substring'] = valueObj;
+
+                    // e.g. "contains (data.User_Email, :v_data.User_Email-substring)"
+
+                    filterConditionStrings.push(
+                        'contains (' + sanitizedKey + ', ' + ':v_' + sanitizedKey + '-substring)'
+                    );
+
+                    break;
+                default:
+                    // All other operators: '=', '<', '>', '<=', '>='
+
+                    expressionAttributeValues[':v_' + sanitizedKey] = valueObj;
+
+                    // e.g. "data.User_Email = :v_data.User_Email"
+
+                    filterConditionStrings.push(
+                        sanitizedKey + ' ' + condition.operator + ' ' + ':v_' + sanitizedKey
+                    );
+            }
         }
 
         // Join all the condition strings into a single string with "AND" seperators
 
-        // e.g. "data.User_Email = v:_User_Email AND data.Interaction_Type = v:_Interaction_Type"
+        // e.g. "data.User_Email = v:_data.User_Email AND data.Interaction_Type = v:_data.Interaction_Type"
 
         filterExpression = filterConditionStrings.join(' AND ');
 
@@ -160,6 +192,20 @@ wacalytics = {
             FilterExpression: filterExpression, // Nested conditions
             ExpressionAttributeValues: expressionAttributeValues // All attributes
         };
+
+        return params;
+    },
+
+    /**
+     * readFromDb
+     * @param {Query} query
+     * @return {Promise}
+     */
+
+    readFromDb: function(query) {
+        var self = this,
+            defered = q.defer(),
+            params = self.buildDynamoQuery(query);
 
         console.log('[wacalytics] Querying DB...');
 
@@ -552,6 +598,8 @@ wacalytics = {
 
                 startTime = Date.now();
 
+                // An example query:
+
                 query.startTime     = 0;
                 query.endTime       = 9999999999;
 
@@ -559,12 +607,21 @@ wacalytics = {
                     {
                         property: 'Interaction Type',
                         operator: '=',
-                        value: 'Signed In'
+                        value: 'Video Interaction'
                     },
                     {
                         property: 'Browser',
                         operator: '=',
                         value: 'Chrome'
+                    },
+                    {
+                        property: 'User Email',
+                        operator: 'contains',
+                        value: '@wearecolony.com'
+                    },
+                    {
+                        property: 'Errors',
+                        operator: 'exists'
                     }
                 ];
 
