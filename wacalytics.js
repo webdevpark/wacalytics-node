@@ -93,6 +93,7 @@ wacalytics = {
             valueObj                    = null,
             typeIdentifier              = '',
             sanitizedKey                = '',
+            sanitizedVar                = '',
             i                           = -1;
 
         // Populate the default, top-level expression attributes
@@ -102,17 +103,18 @@ wacalytics = {
                 S: 'Website'
             },
             ':v_startTime': {
-                N: new String(query.startTime)
+                N: query.startTime.toString()
             },
             ':v_endTime': {
-                N: new String(query.endTime)
+                N: query.endTime.toString()
             }
         };
 
         // Parse the query conditions into an expression with attributes
 
         for (i = 0; condition = query.conditions[i]; i++) {
-            sanitizedKey = 'data.' + condition.property.replace(/ /g, '');
+            sanitizedVar = ':v_' + condition.property.replace(/ /g, '_'),
+            sanitizedKey = 'event_data.' + condition.property.replace(/ /g, '_'),
             valueObj = {};
 
             switch (typeof condition.value) {
@@ -131,10 +133,10 @@ wacalytics = {
             }
 
             if (condition.value) {
-                valueObj[typeIdentifier] = new String(condition.value);
+                valueObj[typeIdentifier] = condition.value.toString();
             }
 
-            switch (typeof condition.operator.toLowerCase()) {
+            switch (condition.operator.toLowerCase()) {
                 case 'exists':
                     // e.g. "attribute_exists (data.Errors)"
 
@@ -152,24 +154,24 @@ wacalytics = {
 
                     break;
                 case 'contains':
-                    expressionAttributeValues[':v_' + sanitizedKey + '-substring'] = valueObj;
+                    expressionAttributeValues[sanitizedVar + '_substring'] = valueObj;
 
                     // e.g. "contains (data.User_Email, :v_data.User_Email-substring)"
 
                     filterConditionStrings.push(
-                        'contains (' + sanitizedKey + ', ' + ':v_' + sanitizedKey + '-substring)'
+                        'contains (' + sanitizedKey + ', ' + sanitizedVar + '_substring)'
                     );
 
                     break;
                 default:
                     // All other operators: '=', '<>', '<', '>', '<=', '>='
 
-                    expressionAttributeValues[':v_' + sanitizedKey] = valueObj;
+                    expressionAttributeValues[sanitizedVar] = valueObj;
 
                     // e.g. "data.User_Email = :v_data.User_Email"
 
                     filterConditionStrings.push(
-                        sanitizedKey + ' ' + condition.operator + ' ' + ':v_' + sanitizedKey
+                        sanitizedKey + ' ' + condition.operator + ' ' + sanitizedVar
                     );
             }
         }
@@ -186,8 +188,7 @@ wacalytics = {
             TableName: 'events',
             IndexName: 'event_source-event_timeStamp-index', // index neccessary for secondary key queries
             KeyConditionExpression: // Top-level conditions
-                'event_timeStamp >= :v_startTime AND ' +
-                'event_timeStamp <= :v_endTime AND ' +
+                '(event_timeStamp BETWEEN :v_startTime AND :v_endTime) AND ' +
                 'event_source = :v_source',
             FilterExpression: filterExpression, // Nested conditions
             ExpressionAttributeValues: expressionAttributeValues // All attributes
@@ -209,6 +210,8 @@ wacalytics = {
 
         console.log('[wacalytics] Querying DB...');
 
+        console.log(params.FilterExpression);
+
         dynamodb.query(params, function(err, data) {
             var items = [];
 
@@ -223,7 +226,7 @@ wacalytics = {
 
                 console.log('[wacalytics] ' + data.Count + ' items found');
 
-                console.log(items[0]);
+                // console.log(items[0]);
             }
 
             defered.resolve();
@@ -255,14 +258,40 @@ wacalytics = {
             // If "Time" and "Date" properties are present in the data object,
             // use those, otherwise use the values provided in the log.
 
-            newEvent.event_time = event.data.Time || event.time,
-            newEvent.event_date = event.data.Date || event.date,
+            if (event.data.Time) {
+                newEvent.event_time = event.data.Time;
+
+                delete event.data.Time;
+            } else {
+                newEvent.event_time = event.time;
+            }
+
+            if (event.data.Date) {
+                newEvent.event_date = event.data.Date;
+
+                delete event.data.Date;
+            } else {
+                newEvent.event_date = event.date;
+            }
 
             // If "UserAgent" and "IpAddress" are present in the data object,
             // use those, otherwise use the values provided in the log.
 
-            newEvent.event_userAgent = event.data.UserAgent || event['cs(User-Agent)'];
-            newEvent.event_ipAddress = event.data.IpAddress || event['c-ip'];
+            if (event.data.UserAgent) {
+                newEvent.event_userAgent = event.data.UserAgent;
+
+                delete event.data.UserAgent;
+            } else {
+                newEvent.event_userAgent = event['cs(User-Agent)'];
+            }
+
+            if (event.data.IpAddress) {
+                newEvent.event_ipAddress = event.data.IpAddress;
+
+                delete event.data.IpAddress;
+            } else {
+                newEvent.event_ipAddress = event['c-ip'];
+            }
 
             // Generate a Unix timestamp from the date and time properties:
 
@@ -607,7 +636,7 @@ wacalytics = {
                     {
                         property: 'Interaction Type',
                         operator: '=',
-                        value: 'Video Interaction'
+                        value: 'Signed In'
                     },
                     {
                         property: 'Browser',
@@ -618,11 +647,11 @@ wacalytics = {
                         property: 'User Email',
                         operator: 'contains',
                         value: '@wearecolony.com'
-                    },
-                    {
-                        property: 'Errors',
-                        operator: 'exists'
                     }
+                    // {
+                    //     property: 'Errors',
+                    //     operator: 'exists'
+                    // }
                 ];
 
                 return self.readFromDb(query);
