@@ -49,8 +49,6 @@ router = {
                 console.log('[wacalytics] Incoming "ObjectCreated:Put" event');
 
                 return wacCreate.init(record);
-
-                // return wacRead.init(query);
             default:
                 console.log('[wacalytics] Unrecognised event "' + record.eventName + '"');
         }
@@ -84,22 +82,40 @@ router = {
  * @param {LamdbaContext} context
  * @void
  *
- * Exposes a handler function for incoming AWS Lambda events and calls
- * context.done when done
+ * Exposes a handler function for incoming AWS Lambda event
+ * and calls context.done when done
  */
 
 exports.handler = function(event, context) {
     startTime = Date.now();
 
-    router.handleEvent(event)
-        .then(function() {
-            var duration = Date.now() - startTime;
+    if (true) {
+        // Read
 
-            console.log('[wacalytics] Event processed in ' + duration + 'ms');
+        wacRead.init(exampleQuery)
+            .then(function() {
+                var duration = Date.now() - startTime;
 
-            context.done();
-        })
-        .catch(function(e) {
-            console.error(e.stack);
-        });
+                console.log('[wacalytics] Event processed in ' + duration + 'ms');
+
+                context.done();
+            })
+            .catch(function(e) {
+                console.error(e.stack);
+            });
+    } else {
+        // Create
+
+        router.handleEvent(event)
+            .then(function() {
+                var duration = Date.now() - startTime;
+
+                console.log('[wacalytics] Event processed in ' + duration + 'ms');
+
+                context.done();
+            })
+            .catch(function(e) {
+                console.error(e.stack);
+            });
+    }
 };

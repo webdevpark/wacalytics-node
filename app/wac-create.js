@@ -120,7 +120,7 @@ wacCreate = {
                 newEvent.event_location = event['x-edge-location'];
                 newEvent.event_data = event.data;
             } catch(e) {
-                console.warn('[wacalytics] WARNING: An event failed validation');
+                console.warn('[wacalytics-create] WARNING: An event failed validation');
                 console.error(e);
 
                 defered.resolve();
@@ -155,7 +155,7 @@ wacCreate = {
             progress.completed++;
 
             console.log(
-                '[wacalytics] Batch ' +
+                '[wacalytics-create] Batch ' +
                 progress.completed +
                 '/' + progress.total +
                 ' added to DB'
@@ -186,7 +186,7 @@ wacCreate = {
         }
 
         console.log(
-            '[wacalytics] Writing ' +
+            '[wacalytics-create] Writing ' +
             events.length +
             ' events to DB in ' +
             batches.length +
@@ -262,7 +262,7 @@ wacCreate = {
                     sanitizedEventData[sanitizedKey] = eventData[key];
                 }
             } catch(e) {
-                console.error('[wacalytics] Could not parse JSON for event log');
+                console.error('[wacalytics-create] Could not parse JSON for event log');
             }
         }
 
@@ -305,13 +305,13 @@ wacCreate = {
 
         rows = rows.slice(2, rows.length - 1);
 
-        console.log('[wacalytics] Found ' + rows.length + ' events');
+        console.log('[wacalytics-create] Found ' + rows.length + ' events');
 
         rows.forEach(function(row) {
             // In each row, fields are seperated by "tab" characters.
             // Split each column into a array of fields:
 
-            var fields = row.split('    '),
+            var fields = row.split('\t'),
                 event = {},
                 queryString = '';
 
@@ -341,7 +341,7 @@ wacCreate = {
 
         if (offset > 0) {
             console.warn(
-                '[wacalytics] WARNING: There are ' +
+                '[wacalytics-create] WARNING: There are ' +
                 offset +
                 ' invalid requests in file "' +
                 srcKey +
@@ -392,7 +392,7 @@ wacCreate = {
             // The AWS_ENVIRONMENT global variable exists,
             // so assume we are running remotely
 
-            console.log('[wacalytics] Detected AWS environment');
+            console.log('[wacalytics-create] Detected AWS environment');
 
             s3.getObject({
                 Bucket: srcBucket,
@@ -410,14 +410,14 @@ wacCreate = {
 
                             break;
                         default:
-                            console.log('[wacalytics] Unrecognised file type', file.ContentType);
+                            console.log('[wacalytics-create] Unrecognised file type', file.ContentType);
                     }
                 }
             });
         } else {
             // Local development
 
-            console.log('[wacalytics] Detected local dev environment');
+            console.log('[wacalytics-create] Detected local dev environment');
 
             fs.readFile(LOG_PATH, function (e, buffer) {
                 if (e) {
@@ -455,28 +455,28 @@ wacCreate = {
 
         return self.readFile(srcBucket, srcKey)
             .then(function(buffer) {
-                console.log('[wacalytics] File read in ' + (Date.now() - startTime) + 'ms');
+                console.log('[wacalytics-create] File read in ' + (Date.now() - startTime) + 'ms');
 
                 startTime = Date.now();
 
                 return self.unzipLogFile(buffer);
             })
             .then(function(logData) {
-                console.log('[wacalytics] Log unzipped in ' + (Date.now() - startTime) + 'ms');
+                console.log('[wacalytics-create] Log unzipped in ' + (Date.now() - startTime) + 'ms');
 
                 startTime = Date.now();
 
                 return self.parseLogFile(logData, srcKey);
             })
             .then(function(events) {
-                console.log('[wacalytics] Log parsed in ' + (Date.now() - startTime) + 'ms');
+                console.log('[wacalytics-create] Log parsed in ' + (Date.now() - startTime) + 'ms');
 
                 startTime = Date.now();
 
                 return self.writeToDb(events);
             })
             .then(function() {
-                console.log('[wacalytics] DB writes done in ' + (Date.now() - startTime) + 'ms');
+                console.log('[wacalytics-create] DB writes done in ' + (Date.now() - startTime) + 'ms');
             });
     }
 };

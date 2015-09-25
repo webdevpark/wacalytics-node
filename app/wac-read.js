@@ -1,16 +1,118 @@
 'use strict';
 
-var AWS         = require('aws-sdk'),
-    marshaler   = require('dynamodb-marshaler'),
-    TypedObject = require('typed-object'),
-    q           = require('q'),
+var AWS             = require('aws-sdk'),
+    marshaler       = require('dynamodb-marshaler'),
+    TypedObject     = require('typed-object'),
+    q               = require('q'),
 
-    querySchema = require('../schemas/query-schema'),
+    querySchema     = require('../schemas/query-schema'),
+    responseSchema  = require('../schemas/response-schema'),
 
-    wacRead     = null,
-    dynamodb    = null;
+    wacRead         = null,
+    dynamodb        = null;
 
 wacRead = {
+
+    /**
+     * retrieveEvents
+     * @param {String[]} keys
+     * @return {Promise}
+     */
+
+    retrieveEvents: function(keys) {
+        var defered = q.defer(),
+            marshaledKeys = [],
+            params = null,
+            key = '',
+            i = -1;
+
+        for (i = 0; key = keys[i]; i++) {
+            marshaledKeys.push({
+                event_id: {
+                    S: keys[i]
+                }
+            });
+        }
+
+        params = {
+            RequestItems: {
+                'events': {
+                    Keys: marshaledKeys
+                }
+            }
+        };
+
+        dynamodb.batchGetItem(params, function(err, data) {
+            var items = [];
+
+            if (err) {
+                defered.reject(err);
+            }
+
+            if (!data) {
+                console.log('[wacalytics-read] No items retreived');
+            } else {
+                items = data.Responses.events.map(marshaler.unmarshalItem);
+
+                console.log('[wacalytics-read] ' + items.length + ' items retreived');
+            }
+
+            defered.resolve(items);
+        });
+
+        return defered.promise;
+    },
+
+    /**
+     * paginateKeys
+     * @param {Number} limit
+     * @param {Number} offset
+     * @return {String[]}
+     */
+
+    paginateKeys: function(keys, limit, offset) {
+        var paginatedKeys = [],
+            startIndex = limit * (offset - 1),
+            endIndex = startIndex + limit;
+
+        paginatedKeys = keys.slice(startIndex, endIndex);
+
+        return paginatedKeys;
+    },
+
+    /**
+     * getMatchingKeys
+     * @param {Object} params
+     * @return {Promise} -> {String[]}
+     */
+
+    getMatchingKeys: function(params) {
+        var defered = q.defer();
+
+        console.log('[wacalytics-read] Querying DB...');
+
+        dynamodb.query(params, function(err, data) {
+            var keys = [];
+
+            if (err) {
+                defered.reject(err);
+            }
+
+            if (!data) {
+                console.log('[wacalytics-read] No items found');
+            } else {
+                keys = data.Items.map(function(item) {
+                    return marshaler.unmarshalItem(item).event_id;
+                });
+
+                console.log('[wacalytics-read] ' + data.Count + ' matching items found');
+            }
+
+            defered.resolve(keys);
+        });
+
+        return defered.promise;
+    },
 
     /**
      * buildDynamoQuery
@@ -119,13 +221,14 @@ wacRead = {
         // Create the params object with the constructed values
 
         params = {
-            TableName: 'events',
+            TableName: 'events', // Database table name
             IndexName: 'event_source-event_timeStamp-index', // index neccessary for secondary key queries
             KeyConditionExpression: // Top-level conditions
                 '(event_timeStamp BETWEEN :v_startTime AND :v_endTime) AND ' +
                 'event_source = :v_source',
             FilterExpression: filterExpression, // Nested conditions
-            ExpressionAttributeValues: expressionAttributeValues // All attributes
+            ExpressionAttributeValues: expressionAttributeValues, // All attributes
+            ProjectionExpression: 'event_id'
         };
 
         return params;
@@ -138,10 +241,14 @@ wacRead = {
      */
 
     init: function(query) {
-        var self = this,
-            defered = q.defer(),
-            params = null,
-            newQuery = new TypedObject(querySchema);
+        var self            = this,
+            params          = null,
+            totalMatching   = -1,
+            startTime       = Date.now(),
+            newQuery        = new TypedObject(querySchema),
+            response        = null;
+
+        response = new TypedObject(responseSchema);
 
         // Init S3 APIs
 
@@ -150,44 +257,58 @@ wacRead = {
         });
 
         try {
-            newQuery.startTime  = query.startTime;
-            newQuery.endTime    = query.endTime;
-
-            newQuery.conditions.concat(query.conditions);
+            newQuery.startTime      = query.startTime;
+            newQuery.endTime        = query.endTime;
+            newQuery.conditions     = query.conditions;
+            newQuery.resultsPerPage = Math.min(100, query.resultsPerPage || 10);
+            newQuery.page           = Math.max(1, query.page || 1);
         } catch(e) {
-            console.warn('[wacalytics] WARNING: The provided query failed validation');
-            console.error(e);
+            console.warn('[wacalytics-read] WARNING: The provided query was invalid');
 
-            defered.resolve();
+            response.errors.push(e);
 
-            return defered.promise;
+            throw e;
         }
 
-        params = self.buildDynamoQuery(newQuery);
+        // Convert TypedObject to a normal object
+        // before builder query
 
-        console.log('[wacalytics] Querying DB...');
+        params = self.buildDynamoQuery(newQuery.toObject());
 
-        dynamodb.query(params, function(err, data) {
-            var items = [];
+        return self.getMatchingKeys(params)
+            .then(function(keys) {
+                var duration = Date.now() - startTime,
+                    paginatedKeys = [];
 
-            if (err) {
-                defered.reject(err);
-            }
+                totalMatching = keys.length;
+                paginatedKeys = self.paginateKeys(keys, newQuery.resultsPerPage, newQuery.page);
 
-            if (!data) {
-                console.log('[wacalytics] No items found');
-            } else {
-                items = data.Items.map(marshaler.unmarshalItem);
+                console.log('[wacalytics-read] DB query executed in ' + duration + 'ms');
 
-                console.log('[wacalytics] ' + data.Count + ' items found');
+                startTime = Date.now();
 
-                // console.log(items[0]);
-            }
+                return self.retrieveEvents(paginatedKeys);
+            })
+            .then(function(events) {
+                var duration = Date.now() - startTime;
 
-            defered.resolve();
-        });
+                response.success = true;
 
-        return defered.promise;
+                console.log('[wacalytics-read] DB retrieval executed in ' + duration + 'ms');
+
+                response.data.totalEvents   = totalMatching;
+                response.data.page          = newQuery.page;
+                response.data.totalPages    = Math.ceil(totalMatching / newQuery.resultsPerPage);
+                response.data.events        = events;
+                response.data.totalInPage   = events.length;
+
+                console.log(response.toObject());
+            })
+            .catch(function(e) {
+                response.errors.push(e);
+
+                console.error(e.stack);
+            });
     }
 };
 
