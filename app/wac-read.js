@@ -226,10 +226,13 @@ wacRead = {
             KeyConditionExpression: // Top-level conditions
                 '(event_timeStamp BETWEEN :v_startTime AND :v_endTime) AND ' +
                 'event_source = :v_source',
-            FilterExpression: filterExpression, // Nested conditions
             ExpressionAttributeValues: expressionAttributeValues, // All attributes
             ProjectionExpression: 'event_id'
         };
+
+        if (filterExpression) {
+            params.FilterExpression = filterExpression; // Conditions on nested properties
+        }
 
         return params;
     },
@@ -240,13 +243,22 @@ wacRead = {
      * @return {Promise}
      */
 
-    init: function(query) {
+    init: function(json) {
         var self            = this,
             params          = null,
             totalMatching   = -1,
             startTime       = Date.now(),
+            query           = null,
             newQuery        = new TypedObject(querySchema),
             response        = null;
+
+        try {
+            query = JSON.parse(json);
+        } catch(e) {
+            console.error('[wacalytics-read] The provided query paramter could not be parsed');
+
+            query = {};
+        }
 
         response = new TypedObject(responseSchema);
 
@@ -257,9 +269,9 @@ wacRead = {
         });
 
         try {
-            newQuery.startTime      = query.startTime;
-            newQuery.endTime        = query.endTime;
-            newQuery.conditions     = query.conditions;
+            newQuery.startTime      = query.startTime || 0;
+            newQuery.endTime        = query.endTime || Date.now();
+            newQuery.conditions     = query.conditions || [];
             newQuery.resultsPerPage = Math.min(100, query.resultsPerPage || 10);
             newQuery.page           = Math.max(1, query.page || 1);
         } catch(e) {
@@ -302,7 +314,7 @@ wacRead = {
                 response.data.events        = events;
                 response.data.totalInPage   = events.length;
 
-                console.log(response.toObject());
+                return response.toObject();
             })
             .catch(function(e) {
                 response.errors.push(e);

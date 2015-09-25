@@ -35,22 +35,61 @@ exampleQuery = {
 
 router = {
     /**
-     * eventBus
+     * handleApiEvent
+     * @param {Event} event
+     * @return {Promise}
+     *
+     * Checks for the events "method" property and delagates
+     * it to the appropriate class
+     */
+
+    handleApiEvent: function(event) {
+        var defered = q.defer();
+
+        switch (event.method.toUpperCase()) {
+            case 'GET':
+                console.log('[wacalytics] HTTP GET request');
+
+                console.log(event);
+
+                return wacRead.init(event.query);
+            case 'PUT':
+                return wacUpdate.init();
+            case 'DELETE':
+                return wacDelete.init();
+            default:
+                console.log('[wacalytics] Unknown API method');
+                console.log(event);
+
+                defered.reject();
+
+                return defered.promise;
+        }
+    },
+
+    /**
+     * handleS3Event
      * @param {Record} record
      * @return {Promise}
      *
-     * The eventBus checks for the record's "eventName"
-     * property and delagates it to the appropriate handler method
+     * Checks for the record's "eventName" property and delagates
+     * it to the appropriate class
      */
 
-    eventBus: function(record) {
+    handleS3Event: function(record) {
+        var defered = q.defer();
+
         switch (record.eventName) {
             case 'ObjectCreated:Put':
-                console.log('[wacalytics] Incoming "ObjectCreated:Put" event');
+                console.log('[wacalytics] "ObjectCreated:Put" event type');
 
                 return wacCreate.init(record);
             default:
                 console.log('[wacalytics] Unrecognised event "' + record.eventName + '"');
+
+                defered.reject();
+
+                return defered.promise;
         }
     },
 
@@ -59,20 +98,40 @@ router = {
      * @param {Event} event
      * @return {Promise}
      *
-     * As events come in, they enter wacalytics here. As each event
+     * As events come in, they enter wacalytics here. As each S3 event
      * contains an array of "records", we loop through them here
-     * before delagating each record them to the appropriate handler
+     * before delagating each record to the appropriate handler
      */
 
     handleEvent: function(event) {
         var self    = this,
+            defered = q.defer(),
             tasks   = [];
 
-        event.Records.forEach(function(event) {
-            tasks.push(self.eventBus(event));
-        });
+        if (Array.isArray(event.Records)) {
+            // S3 Events
 
-        return q.all(tasks);
+            console.log('[wacalytics] Detected S3 event');
+
+            event.Records.forEach(function(event) {
+                tasks.push(self.handleS3Event(event));
+            });
+
+            return q.all(tasks);
+        } else if (event.method) {
+            // API Events
+
+            console.log('[wacalytics] Detected API event');
+
+            return self.handleApiEvent(event);
+        } else {
+            console.log('[wacalytics] Unknown event type');
+            console.log(event);
+
+            defered.reject();
+
+            return defered.promise;
+        }
     }
 };
 
@@ -89,33 +148,25 @@ router = {
 exports.handler = function(event, context) {
     startTime = Date.now();
 
-    if (true) {
-        // Read
+    router.handleEvent(event)
+        .then(function(response) {
+            var duration = Date.now() - startTime;
 
-        wacRead.init(exampleQuery)
-            .then(function() {
-                var duration = Date.now() - startTime;
+            console.log('[wacalytics] Event processed in ' + duration + 'ms');
 
-                console.log('[wacalytics] Event processed in ' + duration + 'ms');
+            try {
+                context.succeed(response);
+            } catch(e) {
+                context.fail(e);
+            }
 
-                context.done();
-            })
-            .catch(function(e) {
-                console.error(e.stack);
-            });
-    } else {
-        // Create
+            context.done();
+        })
+        .catch(function(e) {
+            console.error(e.stack);
 
-        router.handleEvent(event)
-            .then(function() {
-                var duration = Date.now() - startTime;
+            context.fail(e);
 
-                console.log('[wacalytics] Event processed in ' + duration + 'ms');
-
-                context.done();
-            })
-            .catch(function(e) {
-                console.error(e.stack);
-            });
-    }
+            context.done();
+        });
 };
