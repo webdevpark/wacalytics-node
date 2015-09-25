@@ -162,7 +162,7 @@ wacalytics = {
 
                     break;
                 default:
-                    // All other operators: '=', '<', '>', '<=', '>='
+                    // All other operators: '=', '<>', '<', '>', '<=', '>='
 
                     expressionAttributeValues[':v_' + sanitizedKey] = valueObj;
 
