@@ -237,87 +237,101 @@ wacalytics = {
 
     /**
      * insertEventToDb
-     * @param {Event} event
+     * @param {Event[]} eventBatch
      * @param {Number} index
      * @param {Object} progress
      * @return {Promise}
      */
 
-    insertEventToDb: function(event, index, progress) {
+    insertEventToDb: function(eventBatch, index, progress) {
         var defered = q.defer(),
             params  = null,
-            newEvent = null;
+            newEvent = null,
+            puts = [],
+            event = null,
+            i = -1;
 
-        // Instantiate a new "TypedObject" to enforce the schema
+        for (i = 0; event = eventBatch[i]; i++) {
+            // Instantiate a new "TypedObject" to enforce the schema
 
-        newEvent = new TypedObject(eventSchema);
+            newEvent = new TypedObject(eventSchema);
 
-        newEvent.event_id = event['x-edge-request-id'];
+            newEvent.event_id = event['x-edge-request-id'];
 
-        try {
-            // If "Time" and "Date" properties are present in the data object,
-            // use those, otherwise use the values provided in the log.
+            try {
+                // If "Time" and "Date" properties are present in the data object,
+                // use those, otherwise use the values provided in the log.
 
-            if (event.data.Time) {
-                newEvent.event_time = event.data.Time;
+                if (event.data.Time) {
+                    newEvent.event_time = event.data.Time;
 
-                delete event.data.Time;
-            } else {
-                newEvent.event_time = event.time;
+                    delete event.data.Time;
+                } else {
+                    newEvent.event_time = event.time;
+                }
+
+                if (event.data.Date) {
+                    newEvent.event_date = event.data.Date;
+
+                    delete event.data.Date;
+                } else {
+                    newEvent.event_date = event.date;
+                }
+
+                // If "UserAgent" and "IpAddress" are present in the data object,
+                // use those, otherwise use the values provided in the log.
+
+                if (event.data.UserAgent) {
+                    newEvent.event_userAgent = event.data.UserAgent;
+
+                    delete event.data.UserAgent;
+                } else {
+                    newEvent.event_userAgent = event['cs(User-Agent)'];
+                }
+
+                if (event.data.IpAddress) {
+                    newEvent.event_ipAddress = event.data.IpAddress;
+
+                    delete event.data.IpAddress;
+                } else {
+                    newEvent.event_ipAddress = event['c-ip'];
+                }
+
+                // Generate a Unix timestamp from the date and time properties:
+
+                newEvent.event_timeStamp = createTime(newEvent.event_date, newEvent.event_time);
+
+                // Set all other useful properties:
+
+                newEvent.event_location = event['x-edge-location'];
+                newEvent.event_data = event.data;
+            } catch(e) {
+                console.warn('[wacalytics] WARNING: An event failed validation.');
+                console.error(e);
+
+                defered.resolve();
+
+                return defered.promise;
             }
 
-            if (event.data.Date) {
-                newEvent.event_date = event.data.Date;
+            // Convert the typed object to an object literal before marshalling:
 
-                delete event.data.Date;
-            } else {
-                newEvent.event_date = event.date;
-            }
-
-            // If "UserAgent" and "IpAddress" are present in the data object,
-            // use those, otherwise use the values provided in the log.
-
-            if (event.data.UserAgent) {
-                newEvent.event_userAgent = event.data.UserAgent;
-
-                delete event.data.UserAgent;
-            } else {
-                newEvent.event_userAgent = event['cs(User-Agent)'];
-            }
-
-            if (event.data.IpAddress) {
-                newEvent.event_ipAddress = event.data.IpAddress;
-
-                delete event.data.IpAddress;
-            } else {
-                newEvent.event_ipAddress = event['c-ip'];
-            }
-
-            // Generate a Unix timestamp from the date and time properties:
-
-            newEvent.event_timeStamp = createTime(newEvent.event_date, newEvent.event_time);
-
-            // Set all other useful properties:
-
-            newEvent.event_location = event['x-edge-location'];
-            newEvent.event_data = event.data;
-        } catch(e) {
-            console.warn('[wacalytics] WARNING: An event failed validation.');
-            console.error(e);
-
-            defered.resolve();
-
-            return defered.promise;
+            puts.push({
+                PutRequest: {
+                    Item: marshaler.marshalItem(newEvent.toObject())
+                }
+            });
         }
 
-        // Convert the typed object to an object literal before marshalling:
+        // Construct the DynamoDB params object
 
         params = {
-            Item: marshaler.marshalItem(newEvent.toObject()),
-            TableName: 'events'
+            RequestItems: {
+                'events': puts
+            }
         };
 
-        dynamodb.putItem(params, function(err, data) {
+        dynamodb.batchWriteItem(params, function(err, data) {
             if (err) {
                 defered.reject(err);
 
@@ -326,8 +340,12 @@ wacalytics = {
 
             progress.completed++;
 
-            // console.log('[wacalytics] Event ' + progress.completed +
-            // '/' + progress.total + ' added to DB');
+            console.log(
+                '[wacalytics] Batch ' +
+                progress.completed +
+                '/' + progress.total +
+                ' added to DB'
+            );
 
             defered.resolve();
         });
@@ -343,15 +361,31 @@ wacalytics = {
     writeToDb: function(events) {
         var self = this,
             tasks = [],
-            progress = {
-                total: events.length,
-                completed: 0
-            };
+            batches = [],
+            progress = null,
+            i = 0;
 
-        console.log('[wacalytics] Writing ' + events.length + ' events to DB...');
+        // Reduce the events array in to batches of 25
 
-        events.forEach(function(event, i) {
-            tasks.push(self.insertEventToDb(event, i, progress));
+        for (i = 0; i < events.length; i += 25) {
+            batches.push(events.slice(i, i + 25));
+        }
+
+        console.log(
+            '[wacalytics] Writing ' +
+            events.length +
+            ' events to DB in ' +
+            batches.length +
+            ' batches'
+        );
+
+        progress = {
+            total: batches.length,
+            completed: 0
+        };
+
+        batches.forEach(function(eventBatch, i) {
+            tasks.push(self.insertEventToDb(eventBatch, i, progress));
         });
 
         return q.all(tasks);
