@@ -295,10 +295,10 @@ wacCreate = {
             params[key] = value;
         });
 
-        if (params.eventData) {
+        if (params.eventData || params.event_data) {
             // If an "eventData" param is present, base64 decode the eventData:
 
-            eventJson = atob(params.eventData);
+            eventJson = atob(params.eventData || params.event_data);
 
             // Parse the JSON string into an object:
 
