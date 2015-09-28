@@ -7,7 +7,7 @@ var AWS             = require('aws-sdk'),
     q               = require('q'),
 
     querySchema     = require('../schemas/query-schema'),
-    responseSchema  = require('../schemas/response-schema'),
+    ResponseSchema  = require('../schemas/response-schema'),
 
     wacRead         = null,
     dynamodb        = null,
@@ -32,6 +32,7 @@ wacRead = {
             totalMatching   = -1,
             startTime       = Date.now(),
             query           = null,
+            responseSchema  = new ResponseSchema(),
             response        = new TypedObject(responseSchema);
 
         // Init S3 APIs
@@ -362,6 +363,12 @@ wacRead = {
             key = '',
             i = -1;
 
+        if (!keys.length) {
+            defered.resolve([]);
+
+            return defered.promise;
+        }
+
         for (i = 0; key = keys[i]; i++) {
             marshaledKeys.push({
                 event_id: {
@@ -382,7 +389,11 @@ wacRead = {
             var items = [];
 
             if (err) {
+                console.log('error');
+
                 defered.reject(err);
+
+                return;
             }
 
             if (!data) {
