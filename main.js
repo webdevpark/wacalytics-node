@@ -147,6 +147,8 @@ router = {
 exports.handler = function(event, context) {
     startTime = Date.now();
 
+    console.log('[wacalytics] An event was triggered at ' + new Date());
+
     router.handleEvent(event)
         .then(function(response) {
             var duration = Date.now() - startTime;
