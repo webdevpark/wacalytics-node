@@ -453,8 +453,10 @@ wacCreate = {
         // Construct the DynamoDB params object
 
         params = {
-            RequestItems[TABLE_NAME] = puts
+            RequestItems: {}
         };
+
+        params.RequestItems[TABLE_NAME] = puts;
 
         dynamodb.batchWriteItem(params, function(err, data) {
             if (err) {

@@ -376,7 +376,7 @@ wacRead = {
 
         params.RequestItems[TABLE_NAME] = {
             Keys: marshaledKeys
-        }
+        };
 
         dynamodb.batchGetItem(params, function(err, data) {
             var items = [];
