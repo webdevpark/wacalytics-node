@@ -34,64 +34,6 @@ exampleQuery = {
 };
 
 router = {
-    /**
-     * handleApiEvent
-     * @param {Event} event
-     * @return {Promise}
-     *
-     * Checks for the events "method" property and delagates
-     * it to the appropriate class
-     */
-
-    handleApiEvent: function(event) {
-        var defered = q.defer();
-
-        switch (event.method.toUpperCase()) {
-            case 'GET':
-                console.log('[wacalytics] HTTP GET request');
-
-                console.log(event);
-
-                return wacRead.init(event.query);
-            case 'PUT':
-                return wacUpdate.init();
-            case 'DELETE':
-                return wacDelete.init();
-            default:
-                console.log('[wacalytics] Unknown API method');
-                console.log(event);
-
-                defered.reject();
-
-                return defered.promise;
-        }
-    },
-
-    /**
-     * handleS3Event
-     * @param {Record} record
-     * @return {Promise}
-     *
-     * Checks for the record's "eventName" property and delagates
-     * it to the appropriate class
-     */
-
-    handleS3Event: function(record) {
-        var defered = q.defer();
-
-        switch (record.eventName) {
-            case 'ObjectCreated:Put':
-                console.log('[wacalytics] "ObjectCreated:Put" event type');
-
-                return wacCreate.init(record);
-            default:
-                console.log('[wacalytics] Unrecognised event "' + record.eventName + '"');
-
-                defered.reject();
-
-                return defered.promise;
-        }
-    },
 
     /**
      * handleEvent
@@ -131,6 +73,63 @@ router = {
             defered.reject();
 
             return defered.promise;
+        }
+    },
+
+    /**
+     * handleS3Event
+     * @param {Record} record
+     * @return {Promise}
+     *
+     * Checks for the record's "eventName" property and delagates
+     * it to the appropriate class
+     */
+
+    handleS3Event: function(record) {
+        var defered = q.defer();
+
+        switch (record.eventName) {
+            case 'ObjectCreated:Put':
+                console.log('[wacalytics] "ObjectCreated:Put" event type');
+
+                return wacCreate.init(record);
+            default:
+                console.log('[wacalytics] Unrecognised event "' + record.eventName + '"');
+
+                defered.reject();
+
+                return defered.promise;
+        }
+    },
+
+    /**
+     * handleApiEvent
+     * @param {Event} event
+     * @return {Promise}
+     *
+     * Checks for the events "method" property and delagates
+     * it to the appropriate class
+     */
+
+    handleApiEvent: function(event) {
+        var defered = q.defer();
+
+        switch (event.method.toUpperCase()) {
+            case 'GET':
+                console.log('[wacalytics] HTTP GET request');
+
+                return wacRead.init(event.query);
+            case 'PUT':
+                return wacUpdate.init();
+            case 'DELETE':
+                return wacDelete.init();
+            default:
+                console.log('[wacalytics] Unknown API method');
+                console.log(event);
+
+                defered.reject();
+
+                return defered.promise;
         }
     }
 };

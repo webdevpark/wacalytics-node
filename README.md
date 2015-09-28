@@ -19,15 +19,15 @@ If you do not already have Node.js installed, download it from [here](https://no
 
 ## Overview
 
-This application forms the back-end of an analytics microservice for logging and querying high-volume analytics events. The application is divided into 4 distinct components:
+This application forms the back-end of an analytics microservice for logging and querying high-volume analytics events. The application is divided into 4 distinct components, corresponding to their respective CRUD operations:
 
-### WacWrite
+### WacCreate
 
 The source application that is being tracked should generate analytics events by making XHR GET requests to the location of the 1px gif in the S3 bucket. With each request, event data can be included as an `event_data` query string paramater. The value of this parameter should be a Base64 encoded JSON string.
 
-As GET requests are made to S3, they are logged by CloudFront and written out to in batches to gzipped log files in the second bucket. A S3 "Lambda" event is triggered whever a log file is written into the bucket which triggers the the "WacWrite" function.
+As GET requests are made to S3, they are logged by CloudFront and written out to in batches to gzipped log files in the second bucket. A S3 "Lambda" event is triggered whever a log file is written into the bucket which triggers the the "WacCreate" function.
 
-The WacWrite function retreives and unzips the newly generate log file, parses its plain text contents into the appropriate number of event objects, and writes them to the database.
+The WacCreate function retreives and unzips the newly generate log file, parses its plain text contents into the appropriate number of event objects, and writes them to the database.
 
 ### WacRead
 
