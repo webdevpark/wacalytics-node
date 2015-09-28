@@ -16,7 +16,8 @@ var AWS         = require('aws-sdk'),
     s3          = null,
     createTime  = null,
 
-    LOG_PATH    = 'bucket/reallivedata.gz';
+    LOG_PATH    = 'bucket/reallivedata.gz',
+    TABLE_NAME  = 'events';
 
 /**
  * createTime
@@ -452,9 +453,7 @@ wacCreate = {
         // Construct the DynamoDB params object
 
         params = {
-            RequestItems: {
-                'events': puts
-            }
+            RequestItems[TABLE_NAME] = puts
         };
 
         dynamodb.batchWriteItem(params, function(err, data) {

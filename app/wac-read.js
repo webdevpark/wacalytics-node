@@ -10,7 +10,9 @@ var AWS             = require('aws-sdk'),
     responseSchema  = require('../schemas/response-schema'),
 
     wacRead         = null,
-    dynamodb        = null;
+    dynamodb        = null,
+
+    TABLE_NAME      = 'events';
 
 wacRead = {
 
@@ -259,7 +261,7 @@ wacRead = {
         // Create the params object with the constructed values
 
         params = {
-            TableName: 'events', // Database table name
+            TableName: TABLE_NAME, // Database table name
             IndexName: 'event_source-event_timeStamp-index', // index neccessary for secondary key queries
             KeyConditionExpression: // Top-level conditions
                 '(event_timeStamp BETWEEN :v_startTime AND :v_endTime) AND ' +
@@ -318,7 +320,7 @@ wacRead = {
         var defered = q.defer();
 
         dynamodb.describeTable({
-            TableName: 'events'
+            TableName: TABLE_NAME
         }, function(err, data) {
             if (err) {
                 defered.reject(err);
@@ -369,12 +371,12 @@ wacRead = {
         }
 
         params = {
-            RequestItems: {
-                'events': {
-                    Keys: marshaledKeys
-                }
-            }
+            RequestItems: {}
         };
+
+        params.RequestItems[TABLE_NAME] = {
+            Keys: marshaledKeys
+        }
 
         dynamodb.batchGetItem(params, function(err, data) {
             var items = [];
