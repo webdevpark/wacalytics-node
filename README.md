@@ -19,7 +19,7 @@ If you do not already have Node.js installed, download it from [here](https://no
 
 ## Overview
 
-This application forms the back-end of an analytics microservive for logging and querying high-volume analytics events. The application is divided into 4 distinct components:
+This application forms the back-end of an analytics microservice for logging and querying high-volume analytics events. The application is divided into 4 distinct components:
 
 ### WacWrite
 
@@ -45,7 +45,7 @@ The database is then queried and returns an array of chronological results as pe
 
 ## Development Commands
 
-You may now run one of the following commands from within the project directory:
+Once node and all project dependencies have been installed, you may run one of the following commands from within the project directory:
 ​
 #### setup
 
@@ -61,7 +61,7 @@ The setup command will also create an "event.json" which can be used to simulate
 
 `$ gulp --run`
 
-This will hint all JavaScript, run the application locally using the "development" config file, and simulate an incoming event using the contents of the "event.json" as the event data.
+This will hint all JavaScript, run the application locally using the "development" config file, and simulate an incoming event using the contents of the "event.json" as the event data. It is worth noting that the remote DyanamoDB instance will still be used even when running the application locally.
 ​
 #### deploy
 
