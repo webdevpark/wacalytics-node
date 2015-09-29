@@ -1,7 +1,5 @@
-var wacCreate    = require('./app/wac-create'),
-    wacRead      = require('./app/wac-read'),
-    wacUpdate    = require('./app/wac-update'),
-    wacDelete    = require('./app/wac-delete'),
+var wacCreate    = require('./app/wac-create-mongo'),
+    wacRead      = require('./app/wac-read-mongo'),
 
     q            = require('q'),
 
@@ -120,9 +118,13 @@ router = {
 
                 return wacRead.init(event.query);
             case 'PUT':
-                return wacUpdate.init();
+                // return wacUpdate.init();
+
+                break;
             case 'DELETE':
-                return wacDelete.init();
+                // return wacDelete.init();
+
+                break;
             default:
                 console.log('[wacalytics] Unknown API method');
                 console.log(event);
