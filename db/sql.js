@@ -1,5 +1,6 @@
 /* global process */
 var q   = require('q'),
+    sql = require('mssql'),
     db  = null;
 
 db = {
@@ -12,9 +13,26 @@ db = {
      */
 
     init: function() {
-        var defered = q.defer();
+        var defered = q.defer(),
+            config = {
+                user: process.env.SQL_USER,
+                password: process.env.SQL_PASSWORD,
+                server: process.env.SQL_SERVER,  
+                database: process.env.SQL_DATABASE,
+                options:{
+                    port: '1433'
+                }
+            };
+    
+        sql.connect(config, function(err) {
+            if (err) {
+                defered.reject(err);	
+            } else {
+                defered.resolve();
+            }
+        });
 
-        return defered.promise;
+	   return defered.promise;
     },
 
     /**

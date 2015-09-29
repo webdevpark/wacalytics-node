@@ -8,7 +8,7 @@ var AWS         = require('aws-sdk'),
     q           = require('q'),
 
     eventSchema = require('../schemas/event-schema-mongo'),
-    db          = require('../db/mongo'),
+    db          = require('../db/sql'),
 
     wacCreate   = null,
     s3          = null,

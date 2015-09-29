@@ -7,7 +7,7 @@ var TypedObject     = require('typed-object'),
 
     ResponseSchema  = require('../schemas/response-schema'),
     querySchema     = require('../schemas/query-schema'),
-    db              = require('../db/mongo'),
+    db              = require('../db/sql'),
 
     EventModel      = null,
     wacRead         = null,
