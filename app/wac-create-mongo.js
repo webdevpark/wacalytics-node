@@ -88,6 +88,10 @@ wacCreate = {
             srcKey      = decodeURIComponent(record.s3.object.key.replace(/\+/g, ' ')),
             startTime   = Date.now();
 
+        // Init S3 APIs
+
+        s3       = new AWS.S3();
+
         initDb();
 
         return self.readFile(srcBucket, srcKey)
