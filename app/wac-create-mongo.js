@@ -96,6 +96,8 @@ wacCreate = {
     init: function(record) {
         var self        = this,
             srcBucket   = record.s3.bucket.name,
+            dstBucket   = record.s3.bucket.name + '-processed',
+            dstBuffer   = '',
             srcKey      = decodeURIComponent(record.s3.object.key.replace(/\+/g, ' ')),
             startTime   = Date.now();
 
@@ -108,6 +110,8 @@ wacCreate = {
         return self.readFile(srcBucket, srcKey)
             .then(function(buffer) {
                 console.log('[wacalytics-create] File read in ' + (Date.now() - startTime) + 'ms');
+
+                dstBuffer = buffer;
 
                 startTime = Date.now();
 
@@ -129,6 +133,15 @@ wacCreate = {
             })
             .then(function() {
                 console.log('[wacalytics-create] DB writes done in ' + (Date.now() - startTime) + 'ms');
+
+                return self.copyLogToProcessed(srcKey, dstBucket, dstBuffer);
+            })
+            .then(function() {
+                return self.deleteOriginalLog(srcKey, srcBucket);
+            })
+            .catch(function(e) {
+                console.log('[wacalytics-create] The operation failed with errors:');
+                console.error(e);
             });
     },
 
@@ -424,7 +437,62 @@ wacCreate = {
             validEvents.push(newEvent);
         }
 
-        return EventModel.create(validEvents);
+        // return EventModel.createQ(validEvents);
+    },
+
+    /**
+     * moveLogToProcessed
+     * @param {String} key
+     * @param {String} bucket
+     * @param {Buffer} body
+     * @return {Promise}
+     */
+
+    copyLogToProcessed: function(key, bucket, body) {
+        var defered = q.defer();
+
+        console.log('[wacalaytics-create] Copying "' + key + '" to bucket "' + bucket + '"');
+
+        s3.putObject({
+            Bucket: bucket,
+            Key: key,
+            Body: body,
+            ContentType: 'application/x-gzip'
+        }, function(err, data) {
+            if (err) {
+                return defered.reject(err);
+            }
+
+            defered.resolve();
+        });
+
+        return defered.promise;
+    },
+
+    /**
+     * deleteOriginalLog
+     * @param {String} key
+     * @param {String} bucket
+     * @return {Promise}
+     */
+
+    deleteOriginalLog: function(key, bucket) {
+        var defered = q.defer();
+
+        console.log('[wacalaytics-create] Deleting original file "' + key + '"');
+
+        s3.deleteObject({
+            Bucket: bucket,
+            Key: key
+        }, function(err) {
+            if (err) {
+                return defered.reject(err);
+            }
+
+            defered.resolve();
+        });
+
+        return defered.promise;
     }
 };
 
