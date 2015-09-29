@@ -39,9 +39,11 @@ gulp.task('config', function() {
 });
 
 gulp.task('exec', function() {
-    var command = argv.run ? 'run' : 'deploy';
+    var command = argv.run ?
+        'node-lambda run' :
+        'node-lambda deploy --configFile deploy.env';
 
-    exec('node-lambda ' + command, function (err, stdout, stderr) {
+    exec(command, function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
     });

@@ -14,10 +14,36 @@ var TypedObject     = require('typed-object'),
 
     EventModel      = null,
     wacRead         = null,
-    initDb          = null;
+    initDb          = null,
+    testQuery       = null;
+
+// An example query for testing wacRead:
+
+testQuery = {
+    startTime: 0,
+    endTime: parseInt(Date.now() / 1000),
+    conditions: [
+        {
+            property: 'Interaction Type',
+            operator: '=',
+            value: 'Signed In'
+        },
+        {
+            property: 'Browser',
+            operator: '!=',
+            value: 'Chrome'
+        },
+        {
+            property: 'User Email',
+            operator: '=',
+            value: 'admin@wearecolony.com'
+        }
+    ]
+};
 
 initDb = function() {
-    var connectionString =
+    var defered = q.defer(),
+        connectionString =
             process.env.MONGODB_USERNAME +
             ':' +
             process.env.MONGODB_PASSWORD +
@@ -30,18 +56,29 @@ initDb = function() {
 
     // extend mongoose with Q methods
 
-    mongooseQ(mongoose);
+    try {
+        if (!wacRead.connectionOpen) {
+            mongooseQ(mongoose);
 
-    // Init DB
+            mongoose.connect(connectionString);
 
-    mongoose.connect(connectionString);
+            wacRead.connectionOpen = true;
+        }
 
-    // Create Models
+        EventModel = mongoose.model('Event', eventSchema);
 
-    EventModel = mongoose.model('Event', eventSchema);
+        defered.resolve();
+    } catch (e) {
+        console.error(e.stack);
+
+        defered.reject(e);
+    }
+
+    return defered.promise;
 };
 
 wacRead = {
+    connectionOpen: false,
 
     /**
      * init
@@ -61,13 +98,15 @@ wacRead = {
             responseSchema  = new ResponseSchema(),
             response        = new TypedObject(responseSchema);
 
-        initDb();
-
         try {
             // Decode and validate user provided query
 
-            query = self.decodeQuery(base64);
-            query = self.validateQuery(query);
+            if (process.env.AWS_LAMBDA_FUNCTION_NAME === 'wacalytics-node-production') {
+                query = self.decodeQuery(base64);
+                query = self.validateQuery(query);
+            } else {
+                query = testQuery;
+            }
 
             // Generate DynamoDB query params from query
 
@@ -84,20 +123,44 @@ wacRead = {
 
         console.log(mongoQuery);
 
-        return q.all([
-            self.queryDb(mongoQuery, query.resultsPerPage, query.page),
-            self.getDbStats()
-        ])
+        return initDb()
+            .then(function() {
+                var duration = Date.now() - startTime;
+
+                startTime = Date.now();
+
+                console.log('[wacalytics-read] DB connection opened in ' + duration + 'ms');
+
+                return q.all([
+                    self.queryDb(mongoQuery, query.resultsPerPage, query.page),
+                    self.getDbStats()
+                ]);
+            })
             .spread(function(eventsData, totalEvents) {
+                var duration = Date.now() - startTime;
+
+                startTime = Date.now();
+
+                console.log('[wacalytics-read] DB query completed in ' + duration + 'ms');
+
                 response.success                    = true;
                 response.data.totalMatchingEvents   = eventsData.totalMatchingEvents;
                 response.data.totalEvents           = totalEvents;
                 response.data.totalInPage           = eventsData.totalInPage;
                 response.data.events                = eventsData.events;
                 response.data.page                  = query.page;
+                response.data.query                      = mongoQuery;
 
                 response.data.totalPages
                     = Math.ceil(eventsData.totalMatchingEvents / query.resultsPerPage);
+
+                console.log('[wacalytics-read] ' + eventsData.totalMatchingEvents + ' event(s) found');
+                console.log('[wacalytics-read] ' + totalEvents + ' event(s) in database');
+
+                return response.toObject();
+            })
+            .catch(function(e) {
+                console.error(e.stack);
 
                 return response.toObject();
             });
@@ -163,8 +226,8 @@ wacRead = {
         var mongoQuery    = {};
 
         mongoQuery.timeStamp = {
-            $gt: query.startTime,
-            $lt: query.endTime
+            $gt: query.startTime || 0,
+            $lt: query.endTime || parseInt(Date.now() / 1000)
         };
 
         query.conditions.forEach(function(condition) {
@@ -175,13 +238,19 @@ wacRead = {
                     mongoQuery[sanitizedKey] = condition.value;
 
                     break;
+                case '!=':
+                    mongoQuery[sanitizedKey] = {
+                        $ne: condition.value
+                    };
+
+                    break;
                 case 'exists':
                     mongoQuery[sanitizedKey] = {
                         $exists: true
                     };
 
                     break;
-                case 'not_exists':
+                case 'not exists':
                     mongoQuery[sanitizedKey] = {
                         $exists: false
                     };
@@ -189,7 +258,13 @@ wacRead = {
                     break;
                 case 'contains':
                     mongoQuery[sanitizedKey] = {
-                        $regex: condition.value
+                        $regex: new RegExp(condition.value, 'i')
+                    };
+
+                    break;
+                case 'starts with':
+                    mongoQuery[sanitizedKey] = {
+                        $regex: new RegExp('^' + condition.value, 'i')
                     };
             }
         });

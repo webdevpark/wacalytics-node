@@ -7,30 +7,6 @@ var wacCreate    = require('./app/wac-create-mongo'),
     exampleQuery = null,
     startTime    = -1;
 
-// An example query for testing wacRead:
-
-exampleQuery = {
-    startTime: 0,
-    endTime: 9999999999,
-    conditions: [
-        {
-            property: 'Interaction Type',
-            operator: '=',
-            value: 'Signed In'
-        },
-        {
-            property: 'Browser',
-            operator: '=',
-            value: 'Chrome'
-        },
-        {
-            property: 'User Email',
-            operator: 'contains',
-            value: '@wearecolony.com'
-        }
-    ]
-};
-
 router = {
 
     /**

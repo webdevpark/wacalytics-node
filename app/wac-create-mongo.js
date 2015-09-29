@@ -17,11 +17,11 @@ var AWS         = require('aws-sdk'),
     createTime  = null,
     EventModel  = null,
 
-    LOG_PATH    = 'bucket/reallivedata.gz',
-    TABLE_NAME  = 'events';
+    LOG_PATH    = 'bucket/reallivedata.gz';
 
 initDb = function() {
-    var connectionString =
+    var defered = q.defer(),
+        connectionString =
             process.env.MONGODB_USERNAME +
             ':' +
             process.env.MONGODB_PASSWORD +
@@ -34,15 +34,25 @@ initDb = function() {
 
     // extend mongoose with Q methods
 
-    mongooseQ(mongoose);
+    try {
+        if (!wacCreate.connectionOpen) {
+            mongooseQ(mongoose);
 
-    // Init DB
+            mongoose.connect(connectionString);
 
-    mongoose.connect(connectionString);
+            wacCreate.connectionOpen = true;
+        }
 
-    // Create Models
+        EventModel = mongoose.model('Event', eventSchema);
 
-    EventModel = mongoose.model('Event', eventSchema);
+        defered.resolve();
+    } catch (e) {
+        console.error(e.stack);
+
+        defered.reject(e);
+    }
+
+    return defered.promise;
 };
 
 /**
@@ -72,6 +82,7 @@ createTime = function(dateString, timeString) {
  */
 
 wacCreate = {
+    connectionOpen: false,
 
     /**
      * init
