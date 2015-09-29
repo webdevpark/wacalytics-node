@@ -2,6 +2,7 @@
 'use strict';
 
 var TypedObject     = require('typed-object'),
+    mongoosePage    = require('mongoose-pagination'),
     mongooseQ       = require('mongoose-q'),
     mongoose        = require('mongoose'),
     atob            = require('atob'),
@@ -54,8 +55,6 @@ wacRead = {
     init: function(base64) {
         var self            = this,
             defered         = q.defer(),
-            totalEvents     = -1,
-            totalMatching   = -1,
             startTime       = Date.now(),
             query           = null,
             mongoQuery      = null,
@@ -85,21 +84,22 @@ wacRead = {
 
         console.log(mongoQuery);
 
-        return EventModel.findQ(mongoQuery, '--v', {
-            skip: query.resultsPerPage * query.page - 1,
-            limit: query.resultsPerPage
-        })
-            .then(function(events) {
-                response.success        = true;
-                response.data.events    = events;
-                response.data.page      = query.page;
+        return q.all([
+            self.queryDb(mongoQuery, query.resultsPerPage, query.page),
+            self.getDbStats()
+        ])
+            .spread(function(eventsData, totalEvents) {
+                response.success                    = true;
+                response.data.totalMatchingEvents   = eventsData.totalMatchingEvents;
+                response.data.totalEvents           = totalEvents;
+                response.data.totalInPage           = eventsData.totalInPage;
+                response.data.events                = eventsData.events;
+                response.data.page                  = query.page;
 
-                console.log(response.toObject());
+                response.data.totalPages
+                    = Math.ceil(eventsData.totalMatchingEvents / query.resultsPerPage);
 
                 return response.toObject();
-            })
-            .catch(function(e) {
-                console.log(e);
             });
     },
 
@@ -195,6 +195,51 @@ wacRead = {
         });
 
         return mongoQuery;
+    },
+
+    /**
+     * queryDb
+     * @param {Object} mongoQuery
+     * @return {Document[]}
+     */
+
+    queryDb: function(mongoQuery, resultsPerPage, page) {
+        var defered = q.defer();
+
+        EventModel
+            .find(mongoQuery)
+            .paginate(page, resultsPerPage, function(err, events, totalMatchingEvents) {
+                if (err) {
+                    defered.reject(err);
+                }
+
+                defered.resolve({
+                    events: events,
+                    totalMatchingEvents: totalMatchingEvents,
+                    totalInPage: events.length
+                });
+            });
+
+        return defered.promise;
+    },
+
+    /**
+     * getDbStats
+     * @return {Stats}
+     */
+
+    getDbStats: function() {
+        var defered = q.defer();
+
+        EventModel.collection.stats(function(err, stats) {
+            if (err) {
+                defered.reject(err);
+            }
+
+            defered.resolve(stats.count);
+        });
+
+        return defered.promise;
     }
 };
 
