@@ -1,7 +1,10 @@
 /* global process */
 var q   = require('q'),
     sql = require('mssql'),
-    db  = null;
+    db  = null,
+    _insertEvent = null,
+    _insertEventId = null,
+    _insertEventProperties = null;
 
 db = {
     /**
@@ -45,9 +48,13 @@ db = {
      */
 
     write: function(events) {
-        var defered = q.defer();
-
-        return defered.promise;
+        var tasks = [];
+            
+        events.forEach(function(event) {
+            tasks.push(_insertEvent(event));
+        });
+        
+        return q.all(tasks);
     },
 
     /**
@@ -82,6 +89,45 @@ db = {
 
         return defered.promise;
     }
+};
+
+_insertEvent = function(event) {
+    return _insertEventId(event)
+            .then(function(eventId) {
+                return _insertEventProperties(event, eventId);  
+            });
+};
+
+_insertEventId = function(event) {
+    var defered = q.defer(),
+        request = new sql.Request(),
+        queryString = '';
+        
+    queryString = 'INSERT INTO [Events] ([EventDate]) VALUES (' + event.date + ' ' + event.time + ');SELECT CAST(SCOPE_IDENTITY() as int) as Id';
+    
+    request.query(queryString, function(err, recordset) {
+        if (err) {
+            defered.reject(err);
+        } else {
+            defered.resolve(recordset[0].Id);
+        }
+    });
+    
+    return defered.promise;
+};
+
+_insertEventProperties = function(event, eventId) {
+    var table = new sql.Table('EventProperties'); // or temporary table, e.g. #temptable 
+    table.columns.add('EventId', sql.Int, {nullable: false});
+    table.columns.add('PropertyName', sql.VarChar(50), {nullable: true});
+    table.columns.add('PropertyValue', sql.VarChar(50), {nullable: true});
+    
+    table.rows.add(777, 'name', 'value');
+    
+    var request = new sql.Request();
+    request.bulk(table, function(err, rowCount) {
+        // ... error checks 
+    });
 };
 
 module.exports = db;
