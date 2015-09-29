@@ -1,5 +1,5 @@
-var wacCreate    = require('./app/wac-create-mongo'),
-    wacRead      = require('./app/wac-read-mongo'),
+var wacCreate    = require('./app/wac-create'),
+    wacRead      = require('./app/wac-read'),
 
     q            = require('q'),
 

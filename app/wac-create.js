@@ -2,58 +2,20 @@
 'use strict';
 
 var AWS         = require('aws-sdk'),
-    mongooseQ   = require('mongoose-q'),
-    mongoose    = require('mongoose'),
     atob        = require('atob'),
     zlib        = require('zlib'),
     fs          = require('fs'),
     q           = require('q'),
 
     eventSchema = require('../schemas/event-schema-mongo'),
+    db          = require('../db/mongo'),
 
     wacCreate   = null,
-    initDb      = null,
     s3          = null,
     createTime  = null,
     EventModel  = null,
 
     LOG_PATH    = 'bucket/reallivedata.gz';
-
-initDb = function() {
-    var defered = q.defer(),
-        connectionString =
-            process.env.MONGODB_USERNAME +
-            ':' +
-            process.env.MONGODB_PASSWORD +
-            '@' +
-            process.env.MONGODB_HOST +
-            ':' +
-            process.env.MONGODB_PORT +
-            '/' +
-            process.env.MONGODB_NAME;
-
-    // extend mongoose with Q methods
-
-    try {
-        if (!wacCreate.connectionOpen) {
-            mongooseQ(mongoose);
-
-            mongoose.connect(connectionString);
-
-            wacCreate.connectionOpen = true;
-        }
-
-        EventModel = mongoose.model('Event', eventSchema);
-
-        defered.resolve();
-    } catch (e) {
-        console.error(e.stack);
-
-        defered.reject(e);
-    }
-
-    return defered.promise;
-};
 
 /**
  * createTime
@@ -103,11 +65,12 @@ wacCreate = {
 
         // Init S3 APIs
 
-        s3       = new AWS.S3();
+        s3 = new AWS.S3();
 
-        initDb();
-
-        return self.readFile(srcBucket, srcKey)
+        return db.init()
+            .then(function() {
+                return self.readFile(srcBucket, srcKey);
+            })
             .then(function(buffer) {
                 console.log('[wacalytics-create] File read in ' + (Date.now() - startTime) + 'ms');
 
@@ -129,7 +92,7 @@ wacCreate = {
 
                 startTime = Date.now();
 
-                return self.writeToDb(events, EventModel);
+                return self.createEvents(events, EventModel);
             })
             .then(function() {
                 console.log('[wacalytics-create] DB writes done in ' + (Date.now() - startTime) + 'ms');
@@ -140,8 +103,9 @@ wacCreate = {
                 return self.deleteOriginalLog(srcKey, srcBucket);
             })
             .catch(function(e) {
-                console.log('[wacalytics-create] The operation failed with errors:');
-                console.error(e);
+                console.log('[wacalytics-create] The operation failed with errors');
+
+                console.error(e.stack);
             });
     },
 
@@ -372,11 +336,11 @@ wacCreate = {
     },
 
     /**
-     * writeToDb
+     * createEvents
      * @param {Event[]} events
      */
 
-    writeToDb: function(events, EventModel) {
+    createEvents: function(events, EventModel) {
         var event = null,
             validEvents = [],
             newEvent = null,
@@ -437,7 +401,7 @@ wacCreate = {
             validEvents.push(newEvent);
         }
 
-        // return EventModel.createQ(validEvents);
+        return db.write(validEvents);
     },
 
     /**
