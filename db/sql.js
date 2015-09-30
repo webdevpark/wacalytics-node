@@ -27,23 +27,26 @@ db = {
             config = {
                 user: process.env.SQL_USER,
                 password: process.env.SQL_PASSWORD,
-                server: process.env.SQL_SERVER,  
+                server: process.env.SQL_SERVER,
                 database: process.env.SQL_DATABASE,
                 options:{
                     port: '1433'
                 }
             };
 
-        _getIp();
-        _addAccessToRds();
-        
-        sql.connect(config, function(err) {
-            if (err) {
-                defered.reject(err);	
-            } else {
-                defered.resolve();
-            }
-        });
+        _getIp()
+            .then(function(){
+                _addAccessToRds();
+            })
+            .then(function(){
+                sql.connect(config, function(err) {
+                    if (err) {
+                        defered.reject(err);
+                    } else {
+                        defered.resolve();
+                    }
+                });
+            })
 
 	   return defered.promise;
     },
@@ -59,13 +62,13 @@ db = {
 
     write: function(events) {
         var tasks = [];
-            
+
         events.forEach(function(event) {
             tasks.push(_insertEvent(event));
         });
 
         // tasks.push(_insertEvent(events[0]));
-        
+
         return q.all(tasks)
             .then(function(){
                 _removeAccessToRds();
@@ -109,7 +112,7 @@ db = {
 _insertEvent = function(event) {
     return _insertEventId(event)
             .then(function(eventId) {
-                return _insertEventProperties(event.data, eventId);  
+                return _insertEventProperties(event.data, eventId);
             });
 };
 
@@ -122,21 +125,21 @@ _insertEventId = function(event) {
         awsEventId = '',
         userId = '',
         interactionType = '';
-    
+
     date = '\'' + event.date + ' ' + event.time + '\'';
     ipAddress = '\'' + event.ipAddress + '\'';
     awsEventId = '\'' + event._id + '\'';
     userId = '\'' + event.data.User_ID + '\'';
     interactionType = '\'' + event.data.Interaction_Type + '\'';
-    
-    queryString = 'INSERT INTO Events (EventDate, IpAddress, AwsEventId, UserId, InteractionType) VALUES (' 
-                    + date + ',' 
-                    + ipAddress + ',' 
-                    + awsEventId + ',' 
-                    + userId + ',' 
-                    + interactionType + 
+
+    queryString = 'INSERT INTO Events (EventDate, IpAddress, AwsEventId, UserId, InteractionType) VALUES ('
+                    + date + ','
+                    + ipAddress + ','
+                    + awsEventId + ','
+                    + userId + ','
+                    + interactionType +
                     '); SELECT CAST(SCOPE_IDENTITY() as int) as Id';
-    
+
     request.query(queryString, function(err, recordset) {
         if (err) {
             defered.reject(err);
@@ -144,7 +147,7 @@ _insertEventId = function(event) {
             defered.resolve(recordset[0].Id);
         }
     });
-    
+
     return defered.promise;
 };
 
@@ -153,15 +156,15 @@ _insertEventProperties = function(data, eventId) {
         defered = q.defer(),
         table = new sql.Table('EventProperties'),
         request = new sql.Request();
-         
+
     table.columns.add('EventId', sql.Int, {nullable: false});
     table.columns.add('PropertyName', sql.NVarChar(50), {nullable: false});
     table.columns.add('PropertyValue', sql.NVarChar(sql.MAX), {nullable: true});
-    
+
     keys.forEach(function(key) {
-        table.rows.add(eventId, key, data[key]);    
+        table.rows.add(eventId, key, data[key]);
     });
-   
+
     request.bulk(table, function(err, rowCount) {
         if (err) {
             defered.reject(err);
@@ -169,21 +172,27 @@ _insertEventProperties = function(data, eventId) {
             defered.resolve();
         }
     });
-    
+
     return defered.promise;
 };
 
 _getIp = function() {
+    var defered = q.defer();
+
     http.get({'host': 'api.ipify.org', 'port': 80, 'path': '/'}, function(resp) {
         resp.on('data', function(ipAddress) {
             ip = ipAddress;
             console.log("My public IP address is: " + ipAddress);
+            defered.resolve();
         });
     });
+
+    return defered.promise;
 };
 
 _addAccessToRds = function() {
-    var params = {
+    var defered = q.defer(),
+        params = {
             CidrIp: ip.toString() + '/32',
             FromPort: 0,
             GroupId: 'sg-128f1977',
@@ -192,24 +201,39 @@ _addAccessToRds = function() {
         };
 
     ec2.authorizeSecurityGroupIngress(params, function(err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else     console.log(data);           // successful response
+        if (err) {
+            console.log(err, err.stack);
+            defered.reject(err);
+        } else {
+            console.log('[wacalytics] Added RDS Acess for ip ' + ip.toString(), data);
+            defered.resolve();
+        }
     });
+
+    return defered.promise;
 };
 
 _removeAccessToRds = function() {
-     var params = {
+    var defered = q.defer(),
+        params = {
             CidrIp: ip.toString() + '/32',
             FromPort: 0,
             GroupId: 'sg-128f1977',
             IpProtocol: 'tcp',
             ToPort: 1433
         };
-    
+
     ec2.authorizeSecurityGroupIngress(params, function(err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else     console.log(data);           // successful response
+        if (err) {
+            console.log(err, err.stack);
+            defered.reject(err);
+        } else {
+            console.log('[wacalytics] Added RDS Acess for ip ' + ip.toString(), data);
+            defered.resolve();
+        }
     });
+
+    return defered.promise;
 };
 
 module.exports = db;
