@@ -1,13 +1,17 @@
 /* global process */
-var q   = require('q'),
-    sql = require('mssql'),
-    http = require('http'),
-    db  = null,
-    _insertEvent = null,
-    _insertEventId = null,
-    _insertEventProperties = null;
-
-
+var q                      = require('q'),
+    sql                    = require('mssql'),
+    http                   = require('http'),
+    AWS                    = require('aws-sdk'),
+    ec2                    = new AWS.EC2(),
+    db                     = null,
+    ip                     = '',
+    _insertEvent           = null,
+    _insertEventId         = null,
+    _insertEventProperties = null,
+    _addAccessToRds        = null,
+    _removeAccessToRds     = null,
+    _getIp                 = null;
 
 db = {
     /**
@@ -30,12 +34,9 @@ db = {
                 }
             };
 
-        http.get({'host': 'api.ipify.org', 'port': 80, 'path': '/'}, function(resp) {
-            resp.on('data', function(ip) {
-                console.log("My public IP address is: " + ip);
-            });
-        });
-
+        _getIp();
+        _addAccessToRds();
+        
         sql.connect(config, function(err) {
             if (err) {
                 defered.reject(err);	
@@ -65,7 +66,10 @@ db = {
 
         // tasks.push(_insertEvent(events[0]));
         
-        return q.all(tasks);
+        return q.all(tasks)
+            .then(function(){
+                _removeAccessToRds();
+            });
     },
 
     /**
@@ -167,6 +171,45 @@ _insertEventProperties = function(data, eventId) {
     });
     
     return defered.promise;
+};
+
+_getIp = function() {
+    http.get({'host': 'api.ipify.org', 'port': 80, 'path': '/'}, function(resp) {
+        resp.on('data', function(ipAddress) {
+            ip = ipAddress;
+            console.log("My public IP address is: " + ipAddress);
+        });
+    });
+};
+
+_addAccessToRds = function() {
+    var params = {
+            CidrIp: ip.toString() + '/32',
+            FromPort: 0,
+            GroupId: 'sg-128f1977',
+            IpProtocol: 'tcp',
+            ToPort: 1433
+        };
+
+    ec2.authorizeSecurityGroupIngress(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else     console.log(data);           // successful response
+    });
+};
+
+_removeAccessToRds = function() {
+     var params = {
+            CidrIp: ip.toString() + '/32',
+            FromPort: 0,
+            GroupId: 'sg-128f1977',
+            IpProtocol: 'tcp',
+            ToPort: 1433
+        };
+    
+    ec2.authorizeSecurityGroupIngress(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else     console.log(data);           // successful response
+    });
 };
 
 module.exports = db;
