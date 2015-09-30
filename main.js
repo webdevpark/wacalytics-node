@@ -125,6 +125,7 @@ router = {
 exports.handler = function(event, context) {
     startTime = Date.now();
 
+    console.log('[wacalytics] Running: Process - ', process.env);
     console.log('[wacalytics] An event was triggered at ' + new Date());
 
     router.handleEvent(event)
