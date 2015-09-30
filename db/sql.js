@@ -71,16 +71,18 @@ db = {
      */
 
     write: function(events) {
-        var tasks = [];
+        var currentIndex = 0,
+            processEvent = function() {
+                return _insertEvent(events[currentIndex])
+                    .then(function() {
+                        currentIndex++;
 
-        events.forEach(function(event) {
-            tasks.push(_insertEvent(event));
-        });
-
-        return q.all(tasks);
-            // .then(function() {
-            //     return _removeAccessToRds();
-            // });
+                        if (currentIndex !== events.length) {
+                            return processEvent();
+                        }
+                    })
+            };
+        return processEvent();
     },
 
     /**
