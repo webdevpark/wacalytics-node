@@ -53,6 +53,8 @@ db = {
         events.forEach(function(event) {
             tasks.push(_insertEvent(event));
         });
+
+        // tasks.push(_insertEvent(events[0]));
         
         return q.all(tasks);
     },
@@ -94,16 +96,33 @@ db = {
 _insertEvent = function(event) {
     return _insertEventId(event)
             .then(function(eventId) {
-                return _insertEventProperties(event, eventId);  
+                return _insertEventProperties(event.data, eventId);  
             });
 };
 
 _insertEventId = function(event) {
     var defered = q.defer(),
         request = new sql.Request(),
-        queryString = '';
-        
-    queryString = 'INSERT INTO [Events] ([EventDate]) VALUES (' + event.date + ' ' + event.time + ');SELECT CAST(SCOPE_IDENTITY() as int) as Id';
+        queryString = '',
+        date = '',
+        ipAddress = '',
+        awsEventId = '',
+        userId = '',
+        interactionType = '';
+    
+    date = '\'' + event.date + ' ' + event.time + '\'';
+    ipAddress = '\'' + event.ipAddress + '\'';
+    awsEventId = '\'' + event._id + '\'';
+    userId = '\'' + event.data.User_ID + '\'';
+    interactionType = '\'' + event.data.Interaction_Type + '\'';
+    
+    queryString = 'INSERT INTO Events (EventDate, IpAddress, AwsEventId, UserId, InteractionType) VALUES (' 
+                    + date + ',' 
+                    + ipAddress + ',' 
+                    + awsEventId + ',' 
+                    + userId + ',' 
+                    + interactionType + 
+                    '); SELECT CAST(SCOPE_IDENTITY() as int) as Id';
     
     request.query(queryString, function(err, recordset) {
         if (err) {
@@ -116,18 +135,29 @@ _insertEventId = function(event) {
     return defered.promise;
 };
 
-_insertEventProperties = function(event, eventId) {
-    var table = new sql.Table('EventProperties'); // or temporary table, e.g. #temptable 
+_insertEventProperties = function(data, eventId) {
+    var keys = Object.getOwnPropertyNames(data),
+        defered = q.defer(),
+        table = new sql.Table('EventProperties'),
+        request = new sql.Request();
+         
     table.columns.add('EventId', sql.Int, {nullable: false});
-    table.columns.add('PropertyName', sql.VarChar(50), {nullable: true});
-    table.columns.add('PropertyValue', sql.VarChar(50), {nullable: true});
+    table.columns.add('PropertyName', sql.NVarChar(50), {nullable: false});
+    table.columns.add('PropertyValue', sql.NVarChar(sql.MAX), {nullable: true});
     
-    table.rows.add(777, 'name', 'value');
-    
-    var request = new sql.Request();
-    request.bulk(table, function(err, rowCount) {
-        // ... error checks 
+    keys.forEach(function(key) {
+        table.rows.add(eventId, key, data[key]);    
     });
+   
+    request.bulk(table, function(err, rowCount) {
+        if (err) {
+            defered.reject(err);
+        } else {
+            defered.resolve();
+        }
+    });
+    
+    return defered.promise;
 };
 
 module.exports = db;
