@@ -36,7 +36,7 @@ db = {
 
         _getIp()
             .then(function(){
-                _addAccessToRds();
+                return _addAccessToRds();
             })
             .then(function(){
                 sql.connect(config, function(err) {
@@ -71,7 +71,7 @@ db = {
 
         return q.all(tasks)
             .then(function() {
-                _removeAccessToRds();
+                return _removeAccessToRds();
             });
     },
 
