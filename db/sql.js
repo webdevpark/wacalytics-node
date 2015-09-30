@@ -70,7 +70,7 @@ db = {
         // tasks.push(_insertEvent(events[0]));
 
         return q.all(tasks)
-            .then(function(){
+            .then(function() {
                 _removeAccessToRds();
             });
     },
@@ -223,12 +223,12 @@ _removeAccessToRds = function() {
             ToPort: 1433
         };
 
-    ec2.authorizeSecurityGroupIngress(params, function(err, data) {
+    ec2.revokeSecurityGroupIngress(params, function(err, data) {
         if (err) {
             console.log(err, err.stack);
             defered.reject(err);
         } else {
-            console.log('[wacalytics] Added RDS Acess for ip ' + ip.toString(), data);
+            console.log('[wacalytics] Removed RDS Acess for ip ' + ip.toString(), data);
             defered.resolve();
         }
     });
