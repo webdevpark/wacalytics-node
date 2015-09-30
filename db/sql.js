@@ -48,6 +48,8 @@ db = {
         //         });
         //     })
 
+        console.log(config);
+
         sql.connect(config, function(err) {
             if (err) {
                 defered.reject(err);
