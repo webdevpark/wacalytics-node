@@ -1,10 +1,13 @@
 /* global process */
 var q   = require('q'),
     sql = require('mssql'),
+    http = require('http'),
     db  = null,
     _insertEvent = null,
     _insertEventId = null,
     _insertEventProperties = null;
+
+
 
 db = {
     /**
@@ -26,7 +29,13 @@ db = {
                     port: '1433'
                 }
             };
-    
+
+        http.get({'host': 'api.ipify.org', 'port': 80, 'path': '/'}, function(resp) {
+            resp.on('data', function(ip) {
+                console.log("My public IP address is: " + ip);
+            });
+        });
+
         sql.connect(config, function(err) {
             if (err) {
                 defered.reject(err);	
