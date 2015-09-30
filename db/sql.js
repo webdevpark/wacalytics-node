@@ -34,19 +34,27 @@ db = {
                 }
             };
 
-        _getIp()
-            .then(function(){
-                return _addAccessToRds();
-            })
-            .then(function(){
-                sql.connect(config, function(err) {
-                    if (err) {
-                        defered.reject(err);
-                    } else {
-                        defered.resolve();
-                    }
-                });
-            })
+        // _getIp()
+        //     .then(function(){
+        //         return _addAccessToRds();
+        //     })
+        //     .then(function(){
+        //         sql.connect(config, function(err) {
+        //             if (err) {
+        //                 defered.reject(err);
+        //             } else {
+        //                 defered.resolve();
+        //             }
+        //         });
+        //     })
+
+        sql.connect(config, function(err) {
+            if (err) {
+                defered.reject(err);
+            } else {
+                defered.resolve();
+            }
+        });
 
 	   return defered.promise;
     },
@@ -67,12 +75,10 @@ db = {
             tasks.push(_insertEvent(event));
         });
 
-        // tasks.push(_insertEvent(events[0]));
-
-        return q.all(tasks)
-            .then(function() {
-                return _removeAccessToRds();
-            });
+        return q.all(tasks);
+            // .then(function() {
+            //     return _removeAccessToRds();
+            // });
     },
 
     /**
