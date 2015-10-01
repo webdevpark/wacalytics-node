@@ -13,6 +13,7 @@ eventSchema = mongoose.Schema({
     userAgent: String,
     ipAddress: String,
     location: String,
+    name: String,
     data: {}
 }, {
     collection: 'events'

@@ -368,6 +368,12 @@ wacCreate = {
                 newEvent.date = event.date;
             }
 
+            if (event.data['Event Name']) {
+                // Put the event name on the top level for better indexing
+
+                newEvent.name = event.data['Event Name'];
+            }
+
             // If "UserAgent" and "IpAddress" are present in the data object,
             // use those, otherwise use the values provided in the log.
 
@@ -396,7 +402,11 @@ wacCreate = {
             newEvent.location = event['x-edge-location'];
             newEvent.data = event.data;
 
-            validEvents.push(newEvent);
+            if (Object.getOwnPropertyNames(event.data).length) {
+                // Only add the event if it has data
+
+                validEvents.push(newEvent);
+            }
         }
 
         return db.write(validEvents);
