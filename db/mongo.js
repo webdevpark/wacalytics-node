@@ -54,20 +54,30 @@ db = {
                 '/' +
                 process.env['MONGODB_' + dbType + '_NAME'];
 
+        console.log('[wacalytics-mongo] Connected to DB at:', connectionString);
+
         try {
             if (!db.connectionOpen) {
                 mongooseQ(mongoose);
 
-                mongoose.connect(connectionString);
+                mongoose.connect(connectionString, function(err) {
+                    if (err) {
+                        defered.reject(err);
+                    } else {
+                        db.connectionOpen = true;
 
-                db.connectionOpen = true;
+                        EventModel = mongoose.model('Event', eventSchema);
+
+                        console.log('[wacalytics-mongo] Connected to DB successfully');
+
+                        defered.resolve();
+                    }
+                });
             }
-
-            EventModel = mongoose.model('Event', eventSchema);
-
-            defered.resolve();
         } catch (e) {
             console.error(e.stack);
+
+            console.log('[wacalytics-mongo] Could not connect to DB');
 
             defered.reject(e);
         }

@@ -67,6 +67,9 @@ wacCreate = {
 
         s3 = new AWS.S3();
 
+        console.log('[wacalytics-create] Source bucket:', srcBucket);
+        console.log('[wacalytics-create] Destination bucket:', dstBucket);
+
         return db.init()
             .then(function() {
                 return self.readFile(srcBucket, srcKey);
@@ -129,18 +132,25 @@ wacCreate = {
 
             console.log('[wacalytics-create] Detected AWS environment');
 
+            console.log(srcBucket, srcKey);
+
             s3.getObject({
                 Bucket: srcBucket,
                 Key: srcKey
             },
             function(e, file) {
                 if (e) {
+                    console.log('[wacalytics-create] Error reading file');
+
                     return defered.reject(e);
                 }
+
+                console.log('[wacalytics-create] Read file successfully: ', file);
 
                 if (file.Body) {
                     switch (file.ContentType) {
                         case 'application/x-gzip':
+
                             defered.resolve(file.Body);
 
                             break;
@@ -175,10 +185,16 @@ wacCreate = {
     unzipLogFile: function(gzipBuffer) {
         var defered = q.defer();
 
+        console.log('[wacalytics-create] Unzipping buffer ...');
+
         zlib.unzip(gzipBuffer, function(e, buffer) {
             if (e) {
+                console.log('[wacalytics-create] Buffer could not be unzipped');
+
                 return defered.reject(e);
             }
+
+            console.log('[wacalytics-create] Buffer unzipped successfully');
 
             defered.resolve(buffer.toString());
         });
@@ -432,6 +448,8 @@ wacCreate = {
             ContentType: 'application/x-gzip'
         }, function(err, data) {
             if (err) {
+                console.log(err);
+
                 return defered.reject(err);
             }
 
