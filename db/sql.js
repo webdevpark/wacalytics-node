@@ -3,9 +3,12 @@ var q                      = require('q'),
     sql                    = require('mssql'),
     http                   = require('http'),
     AWS                    = require('aws-sdk'),
+
     ec2                    = new AWS.EC2(),
+
     db                     = null,
     ip                     = '',
+
     _insertEvent           = null,
     _insertEventId         = null,
     _insertEventProperties = null,
@@ -121,9 +124,9 @@ db = {
 
 _insertEvent = function(event) {
     return _insertEventId(event)
-            .then(function(eventId) {
-                return _insertEventProperties(event.data, eventId);
-            });
+        .then(function(eventId) {
+            return _insertEventProperties(event.data, eventId);
+        });
 };
 
 _insertEventId = function(event) {
