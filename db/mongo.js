@@ -21,18 +21,38 @@ db = {
 
     init: function() {
         var defered = q.defer(),
-            connectionString =
-                process.env.MONGODB_USERNAME +
-                ':' +
-                process.env.MONGODB_PASSWORD +
-                '@' +
-                process.env.MONGODB_HOST +
-                ':' +
-                process.env.MONGODB_PORT +
-                '/' +
-                process.env.MONGODB_NAME;
+            dbType = '',
+            connectionString = '';
 
-            // extend mongoose with Q methods
+        if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+            switch (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+                case 'wacalytics-node-live':
+                    // Live
+                    dbType = 'LIVE';
+
+                    break;
+                case 'wacalytics-node-production':
+                    // Stage (TODO: rename to stage)
+                    dbType = 'STAGE'
+
+                    break;
+            }
+        } else {
+            // Local Development
+
+            dbType = 'DEV';
+        }
+
+        connectionString =
+            process.env['MONGODB_' + dbType + '_USERNAME'] +
+                ':' +
+                process.env['MONGODB_' + dbType + '_PASSWORD'] +
+                '@' +
+                process.env['MONGODB_' + dbType + '_HOST'] +
+                ':' +
+                process.env['MONGODB_' + dbType + '_PORT'] +
+                '/' +
+                process.env['MONGODB_' + dbType + '_NAME'];
 
         try {
             if (!db.connectionOpen) {

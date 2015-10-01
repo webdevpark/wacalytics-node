@@ -123,9 +123,9 @@ wacCreate = {
     readFile: function(srcBucket, srcKey) {
         var defered = q.defer();
 
-        if (process.env.AWS_LAMBDA_FUNCTION_NAME === 'wacalytics-node-production') {
-            // The AWS_ENVIRONMENT global variable exists,
-            // so assume we are running remotely
+        if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+
+            // Running remotely on AWS
 
             console.log('[wacalytics-create] Detected AWS environment');
 
@@ -150,8 +150,6 @@ wacCreate = {
                 }
             });
         } else {
-            // Local development
-
             console.log('[wacalytics-create] Detected local dev environment');
 
             fs.readFile(LOG_PATH, function (e, buffer) {

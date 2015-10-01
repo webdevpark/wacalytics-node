@@ -31,7 +31,23 @@ gulp.task('lint', function() {
 gulp.task('build', ['code-style', 'lint']);
 
 gulp.task('config', function() {
-    var env = argv.run ? 'development' : 'production';
+    var env =
+        argv.run ? 'development' :
+            argv['deploy-stage'] ? 'stage' :
+                argv['deploy-live'] ? 'live' : 'development';
+
+    switch (env) {
+        case 'development':
+            console.log('[wacalytics] ... Running locally ...');
+
+            break;
+        case 'stage':
+            console.log('[wacalytics] ... Deploying to AWS staging environment ...');
+
+            break;
+        case 'live':
+            console.log('[wacalytics] ... Deploying to AWS live environment ...');
+    }
 
     return gulp.src('./configs/config.env.' + env)
         .pipe(rename('.env'))
