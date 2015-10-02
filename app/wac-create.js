@@ -365,31 +365,6 @@ wacCreate = {
 
             newEvent._id = event['x-edge-request-id'];
 
-            // If "Time" and "Date" properties are present in the data object,
-            // use those, otherwise use the values provided in the log.
-
-            if (event.data.Time) {
-                newEvent.time = event.data.Time;
-
-                delete event.data.Time;
-            } else {
-                newEvent.time = event.time;
-            }
-
-            if (event.data.Date) {
-                newEvent.date = event.data.Date;
-
-                delete event.data.Date;
-            } else {
-                newEvent.date = event.date;
-            }
-
-            if (event.data['Event Name']) {
-                // Put the event name on the top level for better indexing
-
-                newEvent.name = event.data['Event Name'];
-            }
-
             // If "UserAgent" and "IpAddress" are present in the data object,
             // use those, otherwise use the values provided in the log.
 
@@ -409,9 +384,24 @@ wacCreate = {
                 newEvent.ipAddress = event['c-ip'];
             }
 
+            // Move the User ID, User Email, and Event Name to
+            // the top level for better indexing
+
+            newEvent.userId = event.data['User_ID'];
+            newEvent.userEmail = event.data['User_Email'];
+
+            if (event.data['Event_Name']) {
+                // Put the event name on the top level for better indexing
+
+                newEvent.name = event.data['Event_Name'];
+            }
+
             // Generate a Unix timestamp from the date and time properties:
 
-            newEvent.timeStamp = createTime(newEvent.date, newEvent.time);
+            // If "Time" and "Date" properties are present in the data object,
+            // use those, otherwise use the values provided in the log.
+
+            newEvent.timeStamp = createTime(event.data.Date || event.date, event.data.Time || event.time);
 
             // Set all other useful properties:
 

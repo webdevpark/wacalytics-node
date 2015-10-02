@@ -8,10 +8,10 @@ var eventSchema = null,
 eventSchema = mongoose.Schema({
     _id: String,
     timeStamp: Number,
-    date: String,
-    time: String,
     userAgent: String,
     ipAddress: String,
+    userId: String,
+    userEmail: String,
     location: String,
     name: String,
     data: {}

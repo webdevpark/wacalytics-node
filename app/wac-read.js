@@ -60,10 +60,18 @@ wacRead = {
         try {
             // Decode and validate user provided query
 
-            if (process.env.AWS_LAMBDA_FUNCTION_NAME === 'wacalytics-node-production') {
-                query = self.decodeQuery(base64);
-                query = self.validateQuery(query);
+            if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+                // Remove AWS Environment
+
+                if (base64) {
+                    query = self.decodeQuery(base64);
+                    query = self.validateQuery(query);
+                } else {
+                    throw new Error('You must include a query');
+                }
             } else {
+                // Local dev
+
                 query = testQuery;
             }
         } catch(e) {

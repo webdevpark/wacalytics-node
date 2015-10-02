@@ -11,6 +11,7 @@
     "mongoose": "^4.1.9",
     "mongoose-pagination": "^1.0.0",
     "mongoose-q": "~0.0.13",
+    "mssql": "^2.3.1",
     "node-lambda": "^0.6.2",
     "q": "^1.4.1",
     "typed-object": "1.0.0"
