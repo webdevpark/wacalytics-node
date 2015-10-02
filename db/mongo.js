@@ -21,40 +21,20 @@ db = {
 
     init: function() {
         var defered = q.defer(),
-            dbType = '',
             connectionString = '';
 
-        if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
-            switch (process.env.AWS_LAMBDA_FUNCTION_NAME) {
-                case 'wacalytics-node-live':
-                    // Live
-                    dbType = 'LIVE';
-
-                    break;
-                case 'wacalytics-node-production':
-                    // Stage (TODO: rename to stage)
-                    dbType = 'STAGE'
-
-                    break;
-            }
-        } else {
-            // Local Development
-
-            dbType = 'DEV';
-        }
-
         connectionString =
-            process.env['MONGODB_' + dbType + '_USERNAME'] +
+            process.env.MONGODB_USERNAME +
                 ':' +
-                process.env['MONGODB_' + dbType + '_PASSWORD'] +
+                process.env.MONGODB_PASSWORD +
                 '@' +
-                process.env['MONGODB_' + dbType + '_HOST'] +
+                process.env.MONGODB_HOST +
                 ':' +
-                process.env['MONGODB_' + dbType + '_PORT'] +
+                process.env.MONGODB_PORT +
                 '/' +
-                process.env['MONGODB_' + dbType + '_NAME'];
+                process.env.MONGODB_NAME;
 
-        console.log('[wacalytics-mongo] Connected to DB at:', connectionString);
+        console.log('[wacalytics-mongo] Connecting to DB at:', connectionString);
 
         try {
             if (!db.connectionOpen) {

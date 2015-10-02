@@ -8,7 +8,7 @@ var AWS         = require('aws-sdk'),
     q           = require('q'),
 
     eventSchema = require('../schemas/event-schema-mongo'),
-    db          = require('../db/mongo'),
+    db          = require('../db/' + process.env.DB_TYPE),
 
     wacCreate   = null,
     s3          = null,
@@ -132,8 +132,6 @@ wacCreate = {
 
             console.log('[wacalytics-create] Detected AWS environment');
 
-            console.log(srcBucket, srcKey);
-
             s3.getObject({
                 Bucket: srcBucket,
                 Key: srcKey
@@ -145,7 +143,7 @@ wacCreate = {
                     return defered.reject(e);
                 }
 
-                console.log('[wacalytics-create] Read file successfully: ', file);
+                console.log('[wacalytics-create] Read file successful');
 
                 if (file.Body) {
                     switch (file.ContentType) {
