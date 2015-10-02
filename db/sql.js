@@ -37,29 +37,27 @@ db = {
                 }
             };
 
-        // _getIp()
-        //     .then(function(){
-        //         return _addAccessToRds();
-        //     })
-        //     .then(function(){
-        //         sql.connect(config, function(err) {
-        //             if (err) {
-        //                 defered.reject(err);
-        //             } else {
-        //                 defered.resolve();
-        //             }
-        //         });
-        //     })
+        _getIp()
+            .then(function(){
+                return _addAccessToRds();
+            })
+            .then(function(){
+                sql.connect(config, function(err) {
+                    if (err) {
+                        defered.reject(err);
+                    } else {
+                        defered.resolve();
+                    }
+                });
+            });
 
-        console.log(config);
-
-        sql.connect(config, function(err) {
-            if (err) {
-                defered.reject(err);
-            } else {
-                defered.resolve();
-            }
-        });
+        // sql.connect(config, function(err) {
+        //     if (err) {
+        //         defered.reject(err);
+        //     } else {
+        //         defered.resolve();
+        //     }
+        // });
 
 	   return defered.promise;
     },
@@ -83,6 +81,7 @@ db = {
                         if (currentIndex !== events.length) {
                             return processEvent();
                         }
+                        return _removeAccessToRds();
                     })
             };
         return processEvent();
@@ -137,20 +136,20 @@ _insertEventId = function(event) {
         ipAddress = '',
         awsEventId = '',
         userId = '',
-        interactionType = '';
+        eventName = '';
 
-    date = '\'' + event.date + ' ' + event.time + '\'';
+    date = '\'' + event.data.Date + ' ' + event.data.Time + '\'';
     ipAddress = '\'' + event.ipAddress + '\'';
     awsEventId = '\'' + event._id + '\'';
     userId = '\'' + event.data.User_ID + '\'';
-    interactionType = '\'' + event.data.Interaction_Type + '\'';
+    eventName = '\'' + event.name + '\'';
 
-    queryString = 'INSERT INTO Events (EventDate, IpAddress, AwsEventId, UserId, InteractionType) VALUES ('
+    queryString = 'INSERT INTO Events (EventDate, IpAddress, AwsEventId, UserId, EventName) VALUES ('
                     + date + ','
                     + ipAddress + ','
                     + awsEventId + ','
                     + userId + ','
-                    + interactionType +
+                    + eventName +
                     '); SELECT CAST(SCOPE_IDENTITY() as int) as Id';
 
     request.query(queryString, function(err, recordset) {
