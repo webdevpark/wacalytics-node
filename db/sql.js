@@ -138,7 +138,7 @@ _insertEventId = function(event) {
         userId = '',
         eventName = '';
 
-    date = '\'' + event.data.Date + ' ' + event.data.Time + '\'';
+    date = '\'' + (event.data.Date || event.date) + ' ' + (event.data.Time || event.time) + '\'';
     ipAddress = '\'' + event.ipAddress + '\'';
     awsEventId = '\'' + event._id + '\'';
     userId = '\'' + event.data.User_ID + '\'';
