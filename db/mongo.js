@@ -139,6 +139,20 @@ _buildMongoQuery = function(query) {
         $lt: query.endTime || Math.round(Date.now() / 1000)
     };
 
+    if (query.userId) {
+        mongoQuery.userId = query.userId;
+    }
+
+    if (query.userEmail) {
+        mongoQuery.userEmail = query.userEmail;
+    }
+
+    if (query.name) {
+        // TODO: "eventName" might be clearer, but would require a db schema change
+
+        mongoQuery.name = query.name;
+    }
+
     query.conditions.forEach(function(condition) {
         var sanitizedKey = 'data.' + condition.property.replace(/ /g, '_');
 

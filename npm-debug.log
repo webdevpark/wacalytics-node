@@ -1,0 +1,1703 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '--production',
+1 verbose cli   '--prefix',
+1 verbose cli   '/var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T//wacalytics-node-1445245705018' ]
+2 info using npm@2.5.1
+3 info using node@v0.12.0
+4 warn package.json wacalytics-node@0.0.0 No repository field.
+5 verbose install where, deps [ '/var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018',
+5 verbose install   [ 'atob',
+5 verbose install     'aws-sdk',
+5 verbose install     'dynamodb-marshaler',
+5 verbose install     'mongoose',
+5 verbose install     'mongoose-pagination',
+5 verbose install     'mongoose-q',
+5 verbose install     'mssql',
+5 verbose install     'node-lambda',
+5 verbose install     'q',
+5 verbose install     'typed-object' ] ]
+6 verbose install where, peers [ '/var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018',
+6 verbose install   [] ]
+7 info preinstall wacalytics-node@0.0.0
+8 silly cache add args [ 'dynamodb-marshaler@^1.2.1', null ]
+9 verbose cache add spec dynamodb-marshaler@^1.2.1
+10 silly cache add parsed spec { raw: 'dynamodb-marshaler@^1.2.1',
+10 silly cache add   scope: null,
+10 silly cache add   name: 'dynamodb-marshaler',
+10 silly cache add   rawSpec: '^1.2.1',
+10 silly cache add   spec: '>=1.2.1 <2.0.0',
+10 silly cache add   type: 'range' }
+11 verbose addNamed dynamodb-marshaler@>=1.2.1 <2.0.0
+12 silly addNamed semver.valid null
+13 silly addNamed semver.validRange >=1.2.1 <2.0.0
+14 silly addNameRange { name: 'dynamodb-marshaler',
+14 silly addNameRange   range: '>=1.2.1 <2.0.0',
+14 silly addNameRange   hasData: false }
+15 silly mapToRegistry name dynamodb-marshaler
+16 silly mapToRegistry using default registry
+17 silly mapToRegistry registry https://registry.npmjs.org/
+18 silly mapToRegistry uri https://registry.npmjs.org/dynamodb-marshaler
+19 verbose addNameRange registry:https://registry.npmjs.org/dynamodb-marshaler not in flight; fetching
+20 silly cache add args [ 'mongoose@^4.1.9', null ]
+21 verbose cache add spec mongoose@^4.1.9
+22 silly cache add parsed spec { raw: 'mongoose@^4.1.9',
+22 silly cache add   scope: null,
+22 silly cache add   name: 'mongoose',
+22 silly cache add   rawSpec: '^4.1.9',
+22 silly cache add   spec: '>=4.1.9 <5.0.0',
+22 silly cache add   type: 'range' }
+23 verbose addNamed mongoose@>=4.1.9 <5.0.0
+24 silly addNamed semver.valid null
+25 silly addNamed semver.validRange >=4.1.9 <5.0.0
+26 silly addNameRange { name: 'mongoose', range: '>=4.1.9 <5.0.0', hasData: false }
+27 silly mapToRegistry name mongoose
+28 silly mapToRegistry using default registry
+29 silly mapToRegistry registry https://registry.npmjs.org/
+30 silly mapToRegistry uri https://registry.npmjs.org/mongoose
+31 verbose addNameRange registry:https://registry.npmjs.org/mongoose not in flight; fetching
+32 silly cache add args [ 'mongoose-pagination@^1.0.0', null ]
+33 verbose cache add spec mongoose-pagination@^1.0.0
+34 silly cache add parsed spec { raw: 'mongoose-pagination@^1.0.0',
+34 silly cache add   scope: null,
+34 silly cache add   name: 'mongoose-pagination',
+34 silly cache add   rawSpec: '^1.0.0',
+34 silly cache add   spec: '>=1.0.0 <2.0.0',
+34 silly cache add   type: 'range' }
+35 verbose addNamed mongoose-pagination@>=1.0.0 <2.0.0
+36 silly addNamed semver.valid null
+37 silly addNamed semver.validRange >=1.0.0 <2.0.0
+38 silly addNameRange { name: 'mongoose-pagination',
+38 silly addNameRange   range: '>=1.0.0 <2.0.0',
+38 silly addNameRange   hasData: false }
+39 silly mapToRegistry name mongoose-pagination
+40 silly mapToRegistry using default registry
+41 silly mapToRegistry registry https://registry.npmjs.org/
+42 silly mapToRegistry uri https://registry.npmjs.org/mongoose-pagination
+43 verbose addNameRange registry:https://registry.npmjs.org/mongoose-pagination not in flight; fetching
+44 silly cache add args [ 'mongoose-q@~0.0.13', null ]
+45 verbose cache add spec mongoose-q@~0.0.13
+46 silly cache add parsed spec { raw: 'mongoose-q@~0.0.13',
+46 silly cache add   scope: null,
+46 silly cache add   name: 'mongoose-q',
+46 silly cache add   rawSpec: '~0.0.13',
+46 silly cache add   spec: '>=0.0.13 <0.1.0',
+46 silly cache add   type: 'range' }
+47 verbose addNamed mongoose-q@>=0.0.13 <0.1.0
+48 silly addNamed semver.valid null
+49 silly addNamed semver.validRange >=0.0.13 <0.1.0
+50 silly addNameRange { name: 'mongoose-q', range: '>=0.0.13 <0.1.0', hasData: false }
+51 silly mapToRegistry name mongoose-q
+52 silly mapToRegistry using default registry
+53 silly mapToRegistry registry https://registry.npmjs.org/
+54 silly mapToRegistry uri https://registry.npmjs.org/mongoose-q
+55 verbose addNameRange registry:https://registry.npmjs.org/mongoose-q not in flight; fetching
+56 silly cache add args [ 'mssql@^2.3.1', null ]
+57 verbose cache add spec mssql@^2.3.1
+58 silly cache add parsed spec { raw: 'mssql@^2.3.1',
+58 silly cache add   scope: null,
+58 silly cache add   name: 'mssql',
+58 silly cache add   rawSpec: '^2.3.1',
+58 silly cache add   spec: '>=2.3.1 <3.0.0',
+58 silly cache add   type: 'range' }
+59 verbose addNamed mssql@>=2.3.1 <3.0.0
+60 silly addNamed semver.valid null
+61 silly addNamed semver.validRange >=2.3.1 <3.0.0
+62 silly addNameRange { name: 'mssql', range: '>=2.3.1 <3.0.0', hasData: false }
+63 silly mapToRegistry name mssql
+64 silly mapToRegistry using default registry
+65 silly mapToRegistry registry https://registry.npmjs.org/
+66 silly mapToRegistry uri https://registry.npmjs.org/mssql
+67 verbose addNameRange registry:https://registry.npmjs.org/mssql not in flight; fetching
+68 silly cache add args [ 'node-lambda@^0.6.2', null ]
+69 verbose cache add spec node-lambda@^0.6.2
+70 silly cache add parsed spec { raw: 'node-lambda@^0.6.2',
+70 silly cache add   scope: null,
+70 silly cache add   name: 'node-lambda',
+70 silly cache add   rawSpec: '^0.6.2',
+70 silly cache add   spec: '>=0.6.2 <0.7.0',
+70 silly cache add   type: 'range' }
+71 verbose addNamed node-lambda@>=0.6.2 <0.7.0
+72 silly addNamed semver.valid null
+73 silly addNamed semver.validRange >=0.6.2 <0.7.0
+74 silly addNameRange { name: 'node-lambda', range: '>=0.6.2 <0.7.0', hasData: false }
+75 silly mapToRegistry name node-lambda
+76 silly mapToRegistry using default registry
+77 silly mapToRegistry registry https://registry.npmjs.org/
+78 silly mapToRegistry uri https://registry.npmjs.org/node-lambda
+79 verbose addNameRange registry:https://registry.npmjs.org/node-lambda not in flight; fetching
+80 silly cache add args [ 'q@^1.4.1', null ]
+81 verbose cache add spec q@^1.4.1
+82 silly cache add parsed spec { raw: 'q@^1.4.1',
+82 silly cache add   scope: null,
+82 silly cache add   name: 'q',
+82 silly cache add   rawSpec: '^1.4.1',
+82 silly cache add   spec: '>=1.4.1 <2.0.0',
+82 silly cache add   type: 'range' }
+83 verbose addNamed q@>=1.4.1 <2.0.0
+84 silly addNamed semver.valid null
+85 silly addNamed semver.validRange >=1.4.1 <2.0.0
+86 silly addNameRange { name: 'q', range: '>=1.4.1 <2.0.0', hasData: false }
+87 silly mapToRegistry name q
+88 silly mapToRegistry using default registry
+89 silly mapToRegistry registry https://registry.npmjs.org/
+90 silly mapToRegistry uri https://registry.npmjs.org/q
+91 verbose addNameRange registry:https://registry.npmjs.org/q not in flight; fetching
+92 silly cache add args [ 'typed-object@1.0.0', null ]
+93 verbose cache add spec typed-object@1.0.0
+94 silly cache add parsed spec { raw: 'typed-object@1.0.0',
+94 silly cache add   scope: null,
+94 silly cache add   name: 'typed-object',
+94 silly cache add   rawSpec: '1.0.0',
+94 silly cache add   spec: '1.0.0',
+94 silly cache add   type: 'version' }
+95 verbose addNamed typed-object@1.0.0
+96 silly addNamed semver.valid 1.0.0
+97 silly addNamed semver.validRange 1.0.0
+98 silly mapToRegistry name typed-object
+99 silly mapToRegistry using default registry
+100 silly mapToRegistry registry https://registry.npmjs.org/
+101 silly mapToRegistry uri https://registry.npmjs.org/typed-object
+102 verbose addNameVersion registry:https://registry.npmjs.org/typed-object not in flight; fetching
+103 silly cache add args [ 'atob@^1.1.2', null ]
+104 verbose cache add spec atob@^1.1.2
+105 silly cache add parsed spec { raw: 'atob@^1.1.2',
+105 silly cache add   scope: null,
+105 silly cache add   name: 'atob',
+105 silly cache add   rawSpec: '^1.1.2',
+105 silly cache add   spec: '>=1.1.2 <2.0.0',
+105 silly cache add   type: 'range' }
+106 verbose addNamed atob@>=1.1.2 <2.0.0
+107 silly addNamed semver.valid null
+108 silly addNamed semver.validRange >=1.1.2 <2.0.0
+109 silly addNameRange { name: 'atob', range: '>=1.1.2 <2.0.0', hasData: false }
+110 silly mapToRegistry name atob
+111 silly mapToRegistry using default registry
+112 silly mapToRegistry registry https://registry.npmjs.org/
+113 silly mapToRegistry uri https://registry.npmjs.org/atob
+114 verbose addNameRange registry:https://registry.npmjs.org/atob not in flight; fetching
+115 silly cache add args [ 'aws-sdk@^2.1.24', null ]
+116 verbose cache add spec aws-sdk@^2.1.24
+117 silly cache add parsed spec { raw: 'aws-sdk@^2.1.24',
+117 silly cache add   scope: null,
+117 silly cache add   name: 'aws-sdk',
+117 silly cache add   rawSpec: '^2.1.24',
+117 silly cache add   spec: '>=2.1.24 <3.0.0',
+117 silly cache add   type: 'range' }
+118 verbose addNamed aws-sdk@>=2.1.24 <3.0.0
+119 silly addNamed semver.valid null
+120 silly addNamed semver.validRange >=2.1.24 <3.0.0
+121 silly addNameRange { name: 'aws-sdk', range: '>=2.1.24 <3.0.0', hasData: false }
+122 silly mapToRegistry name aws-sdk
+123 silly mapToRegistry using default registry
+124 silly mapToRegistry registry https://registry.npmjs.org/
+125 silly mapToRegistry uri https://registry.npmjs.org/aws-sdk
+126 verbose addNameRange registry:https://registry.npmjs.org/aws-sdk not in flight; fetching
+127 verbose request uri https://registry.npmjs.org/mongoose-pagination
+128 verbose request no auth needed
+129 info attempt registry request try #1 at 10:08:25 AM
+130 verbose request using bearer token for auth
+131 verbose request id 730a0e7754ecfce0
+132 verbose etag "28QDY0ZMRS08NNZ8CFHYDKEFY"
+133 http request GET https://registry.npmjs.org/mongoose-pagination
+134 verbose request uri https://registry.npmjs.org/dynamodb-marshaler
+135 verbose request no auth needed
+136 info attempt registry request try #1 at 10:08:25 AM
+137 verbose request using bearer token for auth
+138 verbose etag "5T4BHCJD2UAQ3ZDFRHKARG0BV"
+139 http request GET https://registry.npmjs.org/dynamodb-marshaler
+140 verbose request uri https://registry.npmjs.org/mongoose-q
+141 verbose request no auth needed
+142 info attempt registry request try #1 at 10:08:25 AM
+143 verbose request using bearer token for auth
+144 verbose etag "CEZY6BAB2SUSSTMCNPCIK3XDX"
+145 http request GET https://registry.npmjs.org/mongoose-q
+146 verbose request uri https://registry.npmjs.org/mongoose
+147 verbose request no auth needed
+148 info attempt registry request try #1 at 10:08:25 AM
+149 verbose request using bearer token for auth
+150 verbose etag "CV9157WHIHLR3IJ45RF91M28E"
+151 http request GET https://registry.npmjs.org/mongoose
+152 verbose request uri https://registry.npmjs.org/mssql
+153 verbose request no auth needed
+154 info attempt registry request try #1 at 10:08:25 AM
+155 verbose request using bearer token for auth
+156 verbose etag "9F2NTCQV4R0PXEAQM01RUKQFC"
+157 http request GET https://registry.npmjs.org/mssql
+158 verbose request uri https://registry.npmjs.org/node-lambda
+159 verbose request no auth needed
+160 info attempt registry request try #1 at 10:08:25 AM
+161 verbose request using bearer token for auth
+162 verbose etag "2Q9YFKPBI1UBYDZPZOWDJLDZM"
+163 http request GET https://registry.npmjs.org/node-lambda
+164 verbose request uri https://registry.npmjs.org/atob
+165 verbose request no auth needed
+166 info attempt registry request try #1 at 10:08:25 AM
+167 verbose request using bearer token for auth
+168 verbose etag "DWDDDTW8MUIXTT4NYNMFDPHP6"
+169 http request GET https://registry.npmjs.org/atob
+170 verbose request uri https://registry.npmjs.org/typed-object
+171 verbose request no auth needed
+172 info attempt registry request try #1 at 10:08:25 AM
+173 verbose request using bearer token for auth
+174 verbose etag "5ESV5BL1K9H85HSPR32E14LZ5"
+175 http request GET https://registry.npmjs.org/typed-object
+176 verbose request uri https://registry.npmjs.org/q
+177 verbose request no auth needed
+178 info attempt registry request try #1 at 10:08:25 AM
+179 verbose request using bearer token for auth
+180 verbose etag "B4QBLZ6KVH6PNZIK52116L5EM"
+181 http request GET https://registry.npmjs.org/q
+182 verbose request uri https://registry.npmjs.org/aws-sdk
+183 verbose request no auth needed
+184 info attempt registry request try #1 at 10:08:25 AM
+185 verbose request using bearer token for auth
+186 verbose etag "63BDU4KKPQUDS6SJFXX761TUU"
+187 http request GET https://registry.npmjs.org/aws-sdk
+188 http 304 https://registry.npmjs.org/node-lambda
+189 silly get cb [ 304,
+189 silly get   { 'cache-control': 'max-age=60',
+189 silly get     'accept-ranges': 'bytes',
+189 silly get     date: 'Mon, 19 Oct 2015 09:08:26 GMT',
+189 silly get     via: '1.1 varnish',
+189 silly get     connection: 'keep-alive',
+189 silly get     'x-served-by': 'cache-lcy1128-LCY',
+189 silly get     'x-cache': 'MISS',
+189 silly get     'x-cache-hits': '0',
+189 silly get     'x-timer': 'S1445245706.014420,VS0,VE88' } ]
+190 verbose etag https://registry.npmjs.org/node-lambda from cache
+191 verbose get saving node-lambda to /Users/patrickkunka/.npm/registry.npmjs.org/node-lambda/.cache.json
+192 silly addNameRange number 2 { name: 'node-lambda', range: '>=0.6.2 <0.7.0', hasData: true }
+193 silly addNameRange versions [ 'node-lambda',
+193 silly addNameRange   [ '0.0.13',
+193 silly addNameRange     '0.0.15',
+193 silly addNameRange     '0.0.16',
+193 silly addNameRange     '0.1.0',
+193 silly addNameRange     '0.1.1',
+193 silly addNameRange     '0.1.2',
+193 silly addNameRange     '0.1.3',
+193 silly addNameRange     '0.1.4',
+193 silly addNameRange     '0.1.5',
+193 silly addNameRange     '0.2.0',
+193 silly addNameRange     '0.2.1',
+193 silly addNameRange     '0.2.2',
+193 silly addNameRange     '0.2.3',
+193 silly addNameRange     '0.2.4',
+193 silly addNameRange     '0.2.5',
+193 silly addNameRange     '0.2.6',
+193 silly addNameRange     '0.3.0',
+193 silly addNameRange     '0.3.1',
+193 silly addNameRange     '0.3.2',
+193 silly addNameRange     '0.3.3',
+193 silly addNameRange     '0.3.4',
+193 silly addNameRange     '0.3.5',
+193 silly addNameRange     '0.3.6',
+193 silly addNameRange     '0.3.7',
+193 silly addNameRange     '0.3.8',
+193 silly addNameRange     '0.3.9',
+193 silly addNameRange     '0.3.10',
+193 silly addNameRange     '0.3.11',
+193 silly addNameRange     '0.3.12',
+193 silly addNameRange     '0.3.13',
+193 silly addNameRange     '0.3.14',
+193 silly addNameRange     '0.3.15',
+193 silly addNameRange     '0.4.0',
+193 silly addNameRange     '0.5.0',
+193 silly addNameRange     '0.6.0',
+193 silly addNameRange     '0.6.1',
+193 silly addNameRange     '0.6.2',
+193 silly addNameRange     '0.7.0',
+193 silly addNameRange     '0.7.1' ] ]
+194 verbose addNamed node-lambda@0.6.2
+195 silly addNamed semver.valid 0.6.2
+196 silly addNamed semver.validRange 0.6.2
+197 silly cache afterAdd node-lambda@0.6.2
+198 verbose afterAdd /Users/patrickkunka/.npm/node-lambda/0.6.2/package/package.json not in flight; writing
+199 verbose afterAdd /Users/patrickkunka/.npm/node-lambda/0.6.2/package/package.json written
+200 http 304 https://registry.npmjs.org/mongoose-q
+201 silly get cb [ 304,
+201 silly get   { 'cache-control': 'max-age=60',
+201 silly get     'accept-ranges': 'bytes',
+201 silly get     date: 'Mon, 19 Oct 2015 09:08:26 GMT',
+201 silly get     via: '1.1 varnish',
+201 silly get     connection: 'keep-alive',
+201 silly get     'x-served-by': 'cache-lcy1123-LCY',
+201 silly get     'x-cache': 'MISS',
+201 silly get     'x-cache-hits': '0',
+201 silly get     'x-timer': 'S1445245706.012602,VS0,VE154' } ]
+202 verbose etag https://registry.npmjs.org/mongoose-q from cache
+203 verbose get saving mongoose-q to /Users/patrickkunka/.npm/registry.npmjs.org/mongoose-q/.cache.json
+204 silly addNameRange number 2 { name: 'mongoose-q', range: '>=0.0.13 <0.1.0', hasData: true }
+205 silly addNameRange versions [ 'mongoose-q',
+205 silly addNameRange   [ '0.0.1',
+205 silly addNameRange     '0.0.2',
+205 silly addNameRange     '0.0.3',
+205 silly addNameRange     '0.0.4',
+205 silly addNameRange     '0.0.6',
+205 silly addNameRange     '0.0.7',
+205 silly addNameRange     '0.0.8',
+205 silly addNameRange     '0.0.9',
+205 silly addNameRange     '0.0.10',
+205 silly addNameRange     '0.0.11',
+205 silly addNameRange     '0.0.12',
+205 silly addNameRange     '0.0.13',
+205 silly addNameRange     '0.0.14',
+205 silly addNameRange     '0.0.15',
+205 silly addNameRange     '0.0.16',
+205 silly addNameRange     '0.0.17',
+205 silly addNameRange     '0.1.0' ] ]
+206 verbose addNamed mongoose-q@0.0.17
+207 silly addNamed semver.valid 0.0.17
+208 silly addNamed semver.validRange 0.0.17
+209 silly cache afterAdd mongoose-q@0.0.17
+210 verbose afterAdd /Users/patrickkunka/.npm/mongoose-q/0.0.17/package/package.json not in flight; writing
+211 verbose afterAdd /Users/patrickkunka/.npm/mongoose-q/0.0.17/package/package.json written
+212 http 304 https://registry.npmjs.org/atob
+213 silly get cb [ 304,
+213 silly get   { 'cache-control': 'max-age=60',
+213 silly get     'accept-ranges': 'bytes',
+213 silly get     date: 'Mon, 19 Oct 2015 09:08:26 GMT',
+213 silly get     via: '1.1 varnish',
+213 silly get     connection: 'keep-alive',
+213 silly get     'x-served-by': 'cache-lcy1124-LCY',
+213 silly get     'x-cache': 'MISS',
+213 silly get     'x-cache-hits': '0',
+213 silly get     'x-timer': 'S1445245706.020615,VS0,VE166' } ]
+214 verbose etag https://registry.npmjs.org/atob from cache
+215 verbose get saving atob to /Users/patrickkunka/.npm/registry.npmjs.org/atob/.cache.json
+216 silly addNameRange number 2 { name: 'atob', range: '>=1.1.2 <2.0.0', hasData: true }
+217 silly addNameRange versions [ 'atob', [ '1.0.0', '1.0.1', '1.1.0', '1.1.2' ] ]
+218 verbose addNamed atob@1.1.2
+219 silly addNamed semver.valid 1.1.2
+220 silly addNamed semver.validRange 1.1.2
+221 silly cache afterAdd atob@1.1.2
+222 verbose afterAdd /Users/patrickkunka/.npm/atob/1.1.2/package/package.json not in flight; writing
+223 verbose afterAdd /Users/patrickkunka/.npm/atob/1.1.2/package/package.json written
+224 http 200 https://registry.npmjs.org/aws-sdk
+225 silly get cb [ 200,
+225 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+225 silly get     etag: '"F5IBWCYZYPK7COS8A3NUG90F1"',
+225 silly get     'content-type': 'application/json',
+225 silly get     'cache-control': 'max-age=60',
+225 silly get     'content-length': '339570',
+225 silly get     'accept-ranges': 'bytes',
+225 silly get     date: 'Mon, 19 Oct 2015 09:08:26 GMT',
+225 silly get     via: '1.1 varnish',
+225 silly get     connection: 'keep-alive',
+225 silly get     'x-served-by': 'cache-lcy1124-LCY',
+225 silly get     'x-cache': 'MISS',
+225 silly get     'x-cache-hits': '0',
+225 silly get     'x-timer': 'S1445245706.022551,VS0,VE264',
+225 silly get     vary: 'Accept' } ]
+226 verbose get saving aws-sdk to /Users/patrickkunka/.npm/registry.npmjs.org/aws-sdk/.cache.json
+227 http 200 https://registry.npmjs.org/mongoose
+228 silly get cb [ 200,
+228 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+228 silly get     etag: '"7R9H48H5MWO2Z3T02F3CEQK2G"',
+228 silly get     'content-type': 'application/json',
+228 silly get     'cache-control': 'max-age=60',
+228 silly get     'content-length': '368677',
+228 silly get     'accept-ranges': 'bytes',
+228 silly get     date: 'Mon, 19 Oct 2015 09:08:26 GMT',
+228 silly get     via: '1.1 varnish',
+228 silly get     connection: 'keep-alive',
+228 silly get     'x-served-by': 'cache-lcy1126-LCY',
+228 silly get     'x-cache': 'MISS',
+228 silly get     'x-cache-hits': '0',
+228 silly get     'x-timer': 'S1445245706.014630,VS0,VE277',
+228 silly get     vary: 'Accept' } ]
+229 verbose get saving mongoose to /Users/patrickkunka/.npm/registry.npmjs.org/mongoose/.cache.json
+230 silly addNameRange number 2 { name: 'aws-sdk', range: '>=2.1.24 <3.0.0', hasData: true }
+231 silly addNameRange versions [ 'aws-sdk',
+231 silly addNameRange   [ '0.9.0-pre.1',
+231 silly addNameRange     '0.9.1-pre.2',
+231 silly addNameRange     '0.9.2-pre.3',
+231 silly addNameRange     '0.9.3-pre.4',
+231 silly addNameRange     '0.9.4-pre.5',
+231 silly addNameRange     '0.9.5-pre.6',
+231 silly addNameRange     '0.9.6-pre.7',
+231 silly addNameRange     '0.9.7-pre.8',
+231 silly addNameRange     '0.9.8-pre.9',
+231 silly addNameRange     '0.9.9-pre.10',
+231 silly addNameRange     '1.0.0',
+231 silly addNameRange     '1.1.0',
+231 silly addNameRange     '1.2.0',
+231 silly addNameRange     '1.3.0',
+231 silly addNameRange     '1.3.1',
+231 silly addNameRange     '1.3.2',
+231 silly addNameRange     '1.4.0',
+231 silly addNameRange     '1.4.1',
+231 silly addNameRange     '1.5.0',
+231 silly addNameRange     '1.5.1',
+231 silly addNameRange     '1.5.2',
+231 silly addNameRange     '1.6.0',
+231 silly addNameRange     '1.7.0',
+231 silly addNameRange     '1.7.1',
+231 silly addNameRange     '1.8.0',
+231 silly addNameRange     '1.8.1',
+231 silly addNameRange     '1.9.0',
+231 silly addNameRange     '1.10.0',
+231 silly addNameRange     '2.0.0-rc1',
+231 silly addNameRange     '1.12.0',
+231 silly addNameRange     '1.13.0',
+231 silly addNameRange     '1.14.0',
+231 silly addNameRange     '2.0.0-rc2',
+231 silly addNameRange     '1.15.0',
+231 silly addNameRange     '2.0.0-rc3',
+231 silly addNameRange     '1.16.0',
+231 silly addNameRange     '2.0.0-rc4',
+231 silly addNameRange     '1.17.0',
+231 silly addNameRange     '2.0.0-rc5',
+231 silly addNameRange     '1.17.1',
+231 silly addNameRange     '2.0.0-rc6',
+231 silly addNameRange     '1.17.2',
+231 silly addNameRange     '2.0.0-rc7',
+231 silly addNameRange     '1.17.3',
+231 silly addNameRange     '2.0.0-rc8',
+231 silly addNameRange     '1.18.0',
+231 silly addNameRange     '2.0.0-rc9',
+231 silly addNameRange     '2.0.0-rc10',
+231 silly addNameRange     '2.0.0-rc11',
+231 silly addNameRange     '2.0.0-rc12',
+231 silly addNameRange     '2.0.0-rc13',
+231 silly addNameRange     '2.0.0-rc.14',
+231 silly addNameRange     '2.0.0-rc.15',
+231 silly addNameRange     '2.0.0-rc.16',
+231 silly addNameRange     '2.0.0-rc.17',
+231 silly addNameRange     '2.0.0-rc.18',
+231 silly addNameRange     '2.0.0-rc.19',
+231 silly addNameRange     '2.0.0-rc.20',
+231 silly addNameRange     '2.0.1',
+231 silly addNameRange     '2.0.2',
+231 silly addNameRange     '2.0.3',
+231 silly addNameRange     '2.0.4',
+231 silly addNameRange     '2.0.5',
+231 silly addNameRange     '2.0.6',
+231 silly addNameRange     '2.0.7',
+231 silly addNameRange     '2.0.8',
+231 silly addNameRange     '2.0.9',
+231 silly addNameRange     '2.0.10',
+231 silly addNameRange     '2.0.11',
+231 silly addNameRange     '2.0.12',
+231 silly addNameRange     '2.0.13',
+231 silly addNameRange     '2.0.14',
+231 silly addNameRange     '2.0.15',
+231 silly addNameRange     '2.0.16',
+231 silly addNameRange     '2.0.17',
+231 silly addNameRange     '2.0.18',
+231 silly addNameRange     '2.0.19',
+231 silly addNameRange     '2.0.21',
+231 silly addNameRange     '2.0.22',
+231 silly addNameRange     '2.0.23',
+231 silly addNameRange     '2.0.24',
+231 silly addNameRange     '2.0.25',
+231 silly addNameRange     '2.0.26',
+231 silly addNameRange     '2.0.27',
+231 silly addNameRange     '2.0.28',
+231 silly addNameRange     '2.0.29',
+231 silly addNameRange     '2.0.30',
+231 silly addNameRange     '2.0.31',
+231 silly addNameRange     '2.1.0',
+231 silly addNameRange     '2.1.1',
+231 silly addNameRange     '2.1.2',
+231 silly addNameRange     '2.1.3',
+231 silly addNameRange     '2.1.4',
+231 silly addNameRange     '2.1.5',
+231 silly addNameRange     '2.1.6',
+231 silly addNameRange     '2.1.7',
+231 silly addNameRange     '2.1.8',
+231 silly addNameRange     '2.1.9',
+231 silly addNameRange     '2.1.10',
+231 silly addNameRange     '2.1.11',
+231 silly addNameRange     '2.1.12',
+231 silly addNameRange     '2.1.13',
+231 silly addNameRange     '2.1.14',
+231 silly addNameRange     '2.1.15',
+231 silly addNameRange     '2.1.16',
+231 silly addNameRange     '2.1.17',
+231 silly addNameRange     '2.1.18',
+231 silly addNameRange     '2.1.19',
+231 silly addNameRange     '2.1.20',
+231 silly addNameRange     '2.1.21',
+231 silly addNameRange     '2.1.22',
+231 silly addNameRange     '2.1.23',
+231 silly addNameRange     '2.1.24',
+231 silly addNameRange     '2.1.25',
+231 silly addNameRange     '2.1.26',
+231 silly addNameRange     '2.1.27',
+231 silly addNameRange     '2.1.28',
+231 silly addNameRange     '2.1.29',
+231 silly addNameRange     '2.1.30',
+231 silly addNameRange     '2.1.31',
+231 silly addNameRange     '2.1.32',
+231 silly addNameRange     '2.1.33',
+231 silly addNameRange     '2.1.34',
+231 silly addNameRange     '2.1.35',
+231 silly addNameRange     '2.1.36',
+231 silly addNameRange     '2.1.37',
+231 silly addNameRange     '2.1.38',
+231 silly addNameRange     '2.1.39',
+231 silly addNameRange     '2.1.40',
+231 silly addNameRange     '2.1.41',
+231 silly addNameRange     '2.1.42',
+231 silly addNameRange     '2.1.43',
+231 silly addNameRange     '2.1.44',
+231 silly addNameRange     '2.1.45',
+231 silly addNameRange     '2.1.46',
+231 silly addNameRange     '2.1.47',
+231 silly addNameRange     '2.1.48',
+231 silly addNameRange     '2.1.49',
+231 silly addNameRange     '2.1.50',
+231 silly addNameRange     '2.2.0',
+231 silly addNameRange     '2.2.1',
+231 silly addNameRange     '2.2.2',
+231 silly addNameRange     '2.2.3',
+231 silly addNameRange     '2.2.4',
+231 silly addNameRange     '2.2.5',
+231 silly addNameRange     '2.2.6',
+231 silly addNameRange     '2.2.7',
+231 silly addNameRange     '2.2.8',
+231 silly addNameRange     '2.2.9',
+231 silly addNameRange     '2.2.10' ] ]
+232 verbose addNamed aws-sdk@2.2.10
+233 silly addNamed semver.valid 2.2.10
+234 silly addNamed semver.validRange 2.2.10
+235 silly mapToRegistry name aws-sdk
+236 silly mapToRegistry using default registry
+237 silly mapToRegistry registry https://registry.npmjs.org/
+238 silly mapToRegistry uri https://registry.npmjs.org/aws-sdk
+239 verbose addRemoteTarball https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.2.10.tgz not in flight; adding
+240 verbose addRemoteTarball [ 'https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.2.10.tgz',
+240 verbose addRemoteTarball   'c73a49c2299a50763f50b65100fe97882aee2dfe' ]
+241 silly addNameRange number 2 { name: 'mongoose', range: '>=4.1.9 <5.0.0', hasData: true }
+242 silly addNameRange versions [ 'mongoose',
+242 silly addNameRange   [ '0.0.1',
+242 silly addNameRange     '0.0.2',
+242 silly addNameRange     '0.0.3',
+242 silly addNameRange     '0.0.4',
+242 silly addNameRange     '0.0.5',
+242 silly addNameRange     '1.0.0',
+242 silly addNameRange     '1.0.1',
+242 silly addNameRange     '1.0.2',
+242 silly addNameRange     '0.0.6',
+242 silly addNameRange     '1.0.3',
+242 silly addNameRange     '1.0.4',
+242 silly addNameRange     '1.0.5',
+242 silly addNameRange     '1.0.6',
+242 silly addNameRange     '1.0.7',
+242 silly addNameRange     '1.0.8',
+242 silly addNameRange     '1.0.10',
+242 silly addNameRange     '1.0.11',
+242 silly addNameRange     '1.0.12',
+242 silly addNameRange     '1.0.13',
+242 silly addNameRange     '1.0.14',
+242 silly addNameRange     '1.0.15',
+242 silly addNameRange     '1.0.16',
+242 silly addNameRange     '1.1.0',
+242 silly addNameRange     '1.1.1',
+242 silly addNameRange     '1.1.2',
+242 silly addNameRange     '1.1.3',
+242 silly addNameRange     '1.1.4',
+242 silly addNameRange     '1.1.5',
+242 silly addNameRange     '1.1.6',
+242 silly addNameRange     '1.1.7',
+242 silly addNameRange     '1.1.8',
+242 silly addNameRange     '1.1.9',
+242 silly addNameRange     '1.1.10',
+242 silly addNameRange     '1.1.11',
+242 silly addNameRange     '1.1.12',
+242 silly addNameRange     '1.1.13',
+242 silly addNameRange     '1.1.14',
+242 silly addNameRange     '1.1.15',
+242 silly addNameRange     '1.1.16',
+242 silly addNameRange     '1.1.17',
+242 silly addNameRange     '1.1.18',
+242 silly addNameRange     '1.1.19',
+242 silly addNameRange     '1.1.20',
+242 silly addNameRange     '1.1.21',
+242 silly addNameRange     '1.1.22',
+242 silly addNameRange     '1.1.23',
+242 silly addNameRange     '1.1.24',
+242 silly addNameRange     '1.1.25',
+242 silly addNameRange     '1.2.0',
+242 silly addNameRange     '1.3.0',
+242 silly addNameRange     '1.3.1',
+242 silly addNameRange     '1.3.2',
+242 silly addNameRange     '1.3.3',
+242 silly addNameRange     '1.3.4',
+242 silly addNameRange     '1.3.5',
+242 silly addNameRange     '1.3.6',
+242 silly addNameRange     '1.3.7',
+242 silly addNameRange     '1.4.0',
+242 silly addNameRange     '1.5.0',
+242 silly addNameRange     '1.6.0',
+242 silly addNameRange     '1.7.2',
+242 silly addNameRange     '1.7.3',
+242 silly addNameRange     '1.7.4',
+242 silly addNameRange     '1.8.0',
+242 silly addNameRange     '1.8.1',
+242 silly addNameRange     '1.8.2',
+242 silly addNameRange     '1.8.3',
+242 silly addNameRange     '1.8.4',
+242 silly addNameRange     '2.0.0',
+242 silly addNameRange     '2.0.1',
+242 silly addNameRange     '2.0.2',
+242 silly addNameRange     '2.0.3',
+242 silly addNameRange     '2.0.4',
+242 silly addNameRange     '2.1.0',
+242 silly addNameRange     '2.1.1',
+242 silly addNameRange     '2.1.2',
+242 silly addNameRange     '2.1.3',
+242 silly addNameRange     '2.1.4',
+242 silly addNameRange     '2.2.0',
+242 silly addNameRange     '2.2.1',
+242 silly addNameRange     '2.2.2',
+242 silly addNameRange     '2.2.3',
+242 silly addNameRange     '2.2.4',
+242 silly addNameRange     '2.3.0',
+242 silly addNameRange     '2.3.1',
+242 silly addNameRange     '2.3.2',
+242 silly addNameRange     '2.3.3',
+242 silly addNameRange     '2.3.4',
+242 silly addNameRange     '2.3.5',
+242 silly addNameRange     '2.3.6',
+242 silly addNameRange     '2.3.7',
+242 silly addNameRange     '2.3.8',
+242 silly addNameRange     '2.3.9',
+242 silly addNameRange     '2.3.10',
+242 silly addNameRange     '2.3.11',
+242 silly addNameRange     '2.3.12',
+242 silly addNameRange     '2.3.13',
+242 silly addNameRange     '2.4.0',
+242 silly addNameRange     '2.4.1',
+242 silly addNameRange     '2.4.2',
+242 silly addNameRange     '2.4.3',
+242 silly addNameRange     '2.4.4',
+242 silly addNameRange     '2.4.5',
+242 silly addNameRange     '2.4.6',
+242 silly addNameRange     '2.4.7',
+242 silly addNameRange     '2.4.8',
+242 silly addNameRange     '2.4.9',
+242 silly addNameRange     '2.4.10',
+242 silly addNameRange     '2.5.0',
+242 silly addNameRange     '2.5.1',
+242 silly addNameRange     '2.5.2',
+242 silly addNameRange     '2.5.3',
+242 silly addNameRange     '2.5.4',
+242 silly addNameRange     '2.5.5',
+242 silly addNameRange     '2.5.6',
+242 silly addNameRange     '2.5.7',
+242 silly addNameRange     '2.5.8',
+242 silly addNameRange     '2.5.9',
+242 silly addNameRange     '2.5.10',
+242 silly addNameRange     '2.5.11',
+242 silly addNameRange     '2.5.12',
+242 silly addNameRange     '2.5.13',
+242 silly addNameRange     '2.5.14',
+242 silly addNameRange     '2.6.0',
+242 silly addNameRange     '2.6.1',
+242 silly addNameRange     '2.6.2',
+242 silly addNameRange     '2.6.3',
+242 silly addNameRange     '2.6.4',
+242 silly addNameRange     '2.6.5',
+242 silly addNameRange     '2.6.6',
+242 silly addNameRange     '2.6.7',
+242 silly addNameRange     '2.6.8',
+242 silly addNameRange     '2.7.0',
+242 silly addNameRange     '2.7.1',
+242 silly addNameRange     '2.7.2',
+242 silly addNameRange     '2.7.4',
+242 silly addNameRange     '2.7.3',
+242 silly addNameRange     '3.0.0',
+242 silly addNameRange     '3.0.1',
+242 silly addNameRange     '3.0.2',
+242 silly addNameRange     '2.8.0',
+242 silly addNameRange     '3.0.3',
+242 silly addNameRange     '3.1.0',
+242 silly addNameRange     '2.8.1',
+242 silly addNameRange     '3.1.1',
+242 silly addNameRange     '2.8.2',
+242 silly addNameRange     '2.8.3',
+242 silly addNameRange     '2.9.0',
+242 silly addNameRange     '3.2.0',
+242 silly addNameRange     '2.9.1',
+242 silly addNameRange     '3.2.1',
+242 silly addNameRange     '2.9.2',
+242 silly addNameRange     '3.2.2',
+242 silly addNameRange     '3.3.0',
+242 silly addNameRange     '3.3.1',
+242 silly addNameRange     '2.9.3',
+242 silly addNameRange     '3.4.0',
+242 silly addNameRange     '2.9.4',
+242 silly addNameRange     '2.9.5',
+242 silly addNameRange     '3.5.0',
+242 silly addNameRange     '3.5.1',
+242 silly addNameRange     '3.5.2',
+242 silly addNameRange     '3.5.3',
+242 silly addNameRange     '2.9.6',
+242 silly addNameRange     '2.9.7',
+242 silly addNameRange     '3.5.4',
+242 silly addNameRange     '3.5.5',
+242 silly addNameRange     '2.9.8',
+242 silly addNameRange     '2.9.9',
+242 silly addNameRange     '3.5.6',
+242 silly addNameRange     '3.5.7',
+242 silly addNameRange     '3.5.8',
+242 silly addNameRange     '2.9.10',
+242 silly addNameRange     '3.5.9',
+242 silly addNameRange     '3.6.2',
+242 silly addNameRange     '3.5.10',
+242 silly addNameRange     '3.6.3',
+242 silly addNameRange     '3.5.11',
+242 silly addNameRange     '3.6.4',
+242 silly addNameRange     '3.6.5',
+242 silly addNameRange     '3.6.6',
+242 silly addNameRange     '3.6.7',
+242 silly addNameRange     '3.5.12',
+242 silly addNameRange     '3.6.8',
+242 silly addNameRange     '3.6.9',
+242 silly addNameRange     '3.6.10',
+242 silly addNameRange     '3.5.13',
+242 silly addNameRange     '3.5.14',
+242 silly addNameRange     '3.6.11',
+242 silly addNameRange     '3.6.12',
+242 silly addNameRange     '3.6.13',
+242 silly addNameRange     '3.6.14',
+242 silly addNameRange     '3.6.15',
+242 silly addNameRange     '3.5.15',
+242 silly addNameRange     '3.7.0',
+242 silly addNameRange     '3.6.16',
+242 silly addNameRange     '3.5.16',
+242 silly addNameRange     '3.6.17',
+242 silly addNameRange     '3.7.2',
+242 silly addNameRange     '3.0.0-alpha1',
+242 silly addNameRange     '3.0.0-alpha2',
+242 silly addNameRange     '3.0.0-rc0',
+242 silly addNameRange     '3.6.0-rc0',
+242 silly addNameRange     '3.6.0-rc1',
+242 silly addNameRange     '3.6.18',
+242 silly addNameRange     '3.7.3',
+242 silly addNameRange     '3.6.19',
+242 silly addNameRange     '3.6.20',
+242 silly addNameRange     '3.7.4',
+242 silly addNameRange     '3.8.0',
+242 silly addNameRange     '3.8.1',
+242 silly addNameRange     '3.8.2',
+242 silly addNameRange     '3.8.3',
+242 silly addNameRange     '3.8.4',
+242 silly addNameRange     '3.8.5',
+242 silly addNameRange     '3.8.6',
+242 silly addNameRange     '3.8.7',
+242 silly addNameRange     '3.8.8',
+242 silly addNameRange     '3.8.9',
+242 silly addNameRange     '3.8.10',
+242 silly addNameRange     '3.8.11',
+242 silly addNameRange     '3.9.0',
+242 silly addNameRange     '3.8.12',
+242 silly addNameRange     '3.8.13',
+242 silly addNameRange     '3.8.14',
+242 silly addNameRange     '3.8.15',
+242 silly addNameRange     '3.9.1',
+242 silly addNameRange     '3.8.16',
+242 silly addNameRange     '3.9.2',
+242 silly addNameRange     '3.8.17',
+242 silly addNameRange     '3.9.3',
+242 silly addNameRange     '3.8.18',
+242 silly addNameRange     '3.9.4',
+242 silly addNameRange     '3.8.19',
+242 silly addNameRange     '3.9.5',
+242 silly addNameRange     '3.8.20',
+242 silly addNameRange     '3.9.6',
+242 silly addNameRange     '3.8.21',
+242 silly addNameRange     '3.9.7',
+242 silly addNameRange     '3.8.22',
+242 silly addNameRange     '4.0.0-rc0',
+242 silly addNameRange     '4.0.0-rc1',
+242 silly addNameRange     '3.8.23',
+242 silly addNameRange     '4.0.0-rc2',
+242 silly addNameRange     '3.8.24',
+242 silly addNameRange     '4.0.0-rc3',
+242 silly addNameRange     '3.8.25',
+242 silly addNameRange     '4.0.0-rc4',
+242 silly addNameRange     '4.0.0',
+242 silly addNameRange     '4.0.1',
+242 silly addNameRange     '3.8.26',
+242 silly addNameRange     '3.8.27',
+242 silly addNameRange     '4.0.2',
+242 silly addNameRange     '3.8.28',
+242 silly addNameRange     '4.0.3',
+242 silly addNameRange     '3.8.29',
+242 silly addNameRange     '4.0.4',
+242 silly addNameRange     '3.8.30',
+242 silly addNameRange     '4.0.5',
+242 silly addNameRange     '3.8.31',
+242 silly addNameRange     '4.0.6',
+242 silly addNameRange     '3.8.33',
+242 silly addNameRange     '4.0.7',
+242 silly addNameRange     '3.8.34',
+242 silly addNameRange     '4.0.8',
+242 silly addNameRange     '4.1.0',
+242 silly addNameRange     '4.1.1',
+242 silly addNameRange     '4.1.2',
+242 silly addNameRange     '3.8.35',
+242 silly addNameRange     '4.1.3',
+242 silly addNameRange     '4.1.5',
+242 silly addNameRange     '4.1.6',
+242 silly addNameRange     '4.1.7',
+242 silly addNameRange     '4.1.8',
+242 silly addNameRange     '4.1.9',
+242 silly addNameRange     '4.1.10',
+242 silly addNameRange     '4.1.11',
+242 silly addNameRange     '3.8.36' ] ]
+243 verbose addNamed mongoose@4.1.11
+244 silly addNamed semver.valid 4.1.11
+245 silly addNamed semver.validRange 4.1.11
+246 silly mapToRegistry name mongoose
+247 silly mapToRegistry using default registry
+248 silly mapToRegistry registry https://registry.npmjs.org/
+249 silly mapToRegistry uri https://registry.npmjs.org/mongoose
+250 verbose addRemoteTarball https://registry.npmjs.org/mongoose/-/mongoose-4.1.11.tgz not in flight; adding
+251 verbose addRemoteTarball [ 'https://registry.npmjs.org/mongoose/-/mongoose-4.1.11.tgz',
+251 verbose addRemoteTarball   'bab2bf70748bf50265d96050453bae5e697b2dd3' ]
+252 info retry fetch attempt 1 at 10:08:26 AM
+253 info attempt registry request try #1 at 10:08:26 AM
+254 http fetch GET https://registry.npmjs.org/mongoose/-/mongoose-4.1.11.tgz
+255 verbose request using bearer token for auth
+256 info retry fetch attempt 1 at 10:08:26 AM
+257 info attempt registry request try #1 at 10:08:26 AM
+258 http fetch GET https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.2.10.tgz
+259 verbose request using bearer token for auth
+260 http 200 https://registry.npmjs.org/mssql
+261 silly get cb [ 200,
+261 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+261 silly get     etag: '"2O8IJU7XRW9Z5THV6PQS5HZJ4"',
+261 silly get     'content-type': 'application/json',
+261 silly get     'cache-control': 'max-age=60',
+261 silly get     'content-length': '112449',
+261 silly get     'accept-ranges': 'bytes',
+261 silly get     date: 'Mon, 19 Oct 2015 09:08:26 GMT',
+261 silly get     via: '1.1 varnish',
+261 silly get     connection: 'keep-alive',
+261 silly get     'x-served-by': 'cache-lcy1122-LCY',
+261 silly get     'x-cache': 'MISS',
+261 silly get     'x-cache-hits': '0',
+261 silly get     'x-timer': 'S1445245706.016251,VS0,VE331',
+261 silly get     vary: 'Accept' } ]
+262 verbose get saving mssql to /Users/patrickkunka/.npm/registry.npmjs.org/mssql/.cache.json
+263 silly addNameRange number 2 { name: 'mssql', range: '>=2.3.1 <3.0.0', hasData: true }
+264 silly addNameRange versions [ 'mssql',
+264 silly addNameRange   [ '0.2.0',
+264 silly addNameRange     '0.2.1',
+264 silly addNameRange     '0.2.2',
+264 silly addNameRange     '0.2.3',
+264 silly addNameRange     '0.2.4',
+264 silly addNameRange     '0.2.5',
+264 silly addNameRange     '0.3.0',
+264 silly addNameRange     '0.3.1',
+264 silly addNameRange     '0.3.2',
+264 silly addNameRange     '0.3.3',
+264 silly addNameRange     '0.3.4',
+264 silly addNameRange     '0.4.0',
+264 silly addNameRange     '0.4.1',
+264 silly addNameRange     '0.4.2',
+264 silly addNameRange     '0.4.3',
+264 silly addNameRange     '0.4.4',
+264 silly addNameRange     '0.4.5',
+264 silly addNameRange     '0.5.0',
+264 silly addNameRange     '0.5.1',
+264 silly addNameRange     '0.5.2',
+264 silly addNameRange     '0.5.3',
+264 silly addNameRange     '0.5.4',
+264 silly addNameRange     '0.5.5',
+264 silly addNameRange     '0.6.0',
+264 silly addNameRange     '0.6.1',
+264 silly addNameRange     '0.6.2',
+264 silly addNameRange     '1.0.0',
+264 silly addNameRange     '1.0.1',
+264 silly addNameRange     '1.0.2',
+264 silly addNameRange     '1.1.0',
+264 silly addNameRange     '1.1.1',
+264 silly addNameRange     '1.2.0',
+264 silly addNameRange     '1.2.1',
+264 silly addNameRange     '1.3.0',
+264 silly addNameRange     '2.0.0',
+264 silly addNameRange     '2.1.0',
+264 silly addNameRange     '2.1.1',
+264 silly addNameRange     '2.1.2',
+264 silly addNameRange     '2.1.3',
+264 silly addNameRange     '2.1.4',
+264 silly addNameRange     '2.1.5',
+264 silly addNameRange     '2.1.6',
+264 silly addNameRange     '2.1.7',
+264 silly addNameRange     '2.1.8',
+264 silly addNameRange     '2.2.0',
+264 silly addNameRange     '2.2.1',
+264 silly addNameRange     '2.3.0',
+264 silly addNameRange     '2.3.1' ] ]
+265 verbose addNamed mssql@2.3.1
+266 silly addNamed semver.valid 2.3.1
+267 silly addNamed semver.validRange 2.3.1
+268 silly cache afterAdd mssql@2.3.1
+269 verbose afterAdd /Users/patrickkunka/.npm/mssql/2.3.1/package/package.json not in flight; writing
+270 verbose afterAdd /Users/patrickkunka/.npm/mssql/2.3.1/package/package.json written
+271 http 304 https://registry.npmjs.org/mongoose-pagination
+272 silly get cb [ 304,
+272 silly get   { 'cache-control': 'max-age=60',
+272 silly get     'accept-ranges': 'bytes',
+272 silly get     date: 'Mon, 19 Oct 2015 09:08:26 GMT',
+272 silly get     via: '1.1 varnish',
+272 silly get     connection: 'keep-alive',
+272 silly get     'x-served-by': 'cache-lcy1127-LCY',
+272 silly get     'x-cache': 'MISS',
+272 silly get     'x-cache-hits': '0',
+272 silly get     'x-timer': 'S1445245706.019168,VS0,VE688' } ]
+273 verbose etag https://registry.npmjs.org/mongoose-pagination from cache
+274 verbose get saving mongoose-pagination to /Users/patrickkunka/.npm/registry.npmjs.org/mongoose-pagination/.cache.json
+275 silly addNameRange number 2 { name: 'mongoose-pagination',
+275 silly addNameRange   range: '>=1.0.0 <2.0.0',
+275 silly addNameRange   hasData: true }
+276 silly addNameRange versions [ 'mongoose-pagination', [ '1.0.0' ] ]
+277 verbose addNamed mongoose-pagination@1.0.0
+278 silly addNamed semver.valid 1.0.0
+279 silly addNamed semver.validRange 1.0.0
+280 http 200 https://registry.npmjs.org/q
+281 silly get cb [ 200,
+281 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+281 silly get     etag: '"36YV2HOTOJPUCMW9KB1VN7VRH"',
+281 silly get     'content-type': 'application/json',
+281 silly get     'cache-control': 'max-age=60',
+281 silly get     'content-length': '143611',
+281 silly get     'accept-ranges': 'bytes',
+281 silly get     date: 'Mon, 19 Oct 2015 09:08:26 GMT',
+281 silly get     via: '1.1 varnish',
+281 silly get     connection: 'keep-alive',
+281 silly get     'x-served-by': 'cache-lcy1122-LCY',
+281 silly get     'x-cache': 'MISS',
+281 silly get     'x-cache-hits': '0',
+281 silly get     'x-timer': 'S1445245706.020560,VS0,VE506',
+281 silly get     vary: 'Accept' } ]
+282 verbose get saving q to /Users/patrickkunka/.npm/registry.npmjs.org/q/.cache.json
+283 silly cache afterAdd mongoose-pagination@1.0.0
+284 verbose afterAdd /Users/patrickkunka/.npm/mongoose-pagination/1.0.0/package/package.json not in flight; writing
+285 http 304 https://registry.npmjs.org/typed-object
+286 silly get cb [ 304,
+286 silly get   { 'cache-control': 'max-age=60',
+286 silly get     'accept-ranges': 'bytes',
+286 silly get     date: 'Mon, 19 Oct 2015 09:08:26 GMT',
+286 silly get     via: '1.1 varnish',
+286 silly get     connection: 'keep-alive',
+286 silly get     'x-served-by': 'cache-lcy1124-LCY',
+286 silly get     'x-cache': 'MISS',
+286 silly get     'x-cache-hits': '0',
+286 silly get     'x-timer': 'S1445245706.022543,VS0,VE699' } ]
+287 verbose etag https://registry.npmjs.org/typed-object from cache
+288 verbose get saving typed-object to /Users/patrickkunka/.npm/registry.npmjs.org/typed-object/.cache.json
+289 silly addNameRange number 2 { name: 'q', range: '>=1.4.1 <2.0.0', hasData: true }
+290 silly addNameRange versions [ 'q',
+290 silly addNameRange   [ '0.0.0',
+290 silly addNameRange     '0.0.1',
+290 silly addNameRange     '0.0.2',
+290 silly addNameRange     '0.0.3',
+290 silly addNameRange     '0.1.0',
+290 silly addNameRange     '0.1.1',
+290 silly addNameRange     '0.1.2',
+290 silly addNameRange     '0.1.3',
+290 silly addNameRange     '0.1.4',
+290 silly addNameRange     '0.1.5',
+290 silly addNameRange     '0.1.6',
+290 silly addNameRange     '0.1.7',
+290 silly addNameRange     '0.1.8',
+290 silly addNameRange     '0.1.9',
+290 silly addNameRange     '0.2.0-rc1',
+290 silly addNameRange     '0.2.0',
+290 silly addNameRange     '0.2.1',
+290 silly addNameRange     '0.2.2',
+290 silly addNameRange     '0.2.3',
+290 silly addNameRange     '0.2.4',
+290 silly addNameRange     '0.2.5',
+290 silly addNameRange     '0.2.6',
+290 silly addNameRange     '0.2.7',
+290 silly addNameRange     '0.2.8',
+290 silly addNameRange     '0.2.9',
+290 silly addNameRange     '0.3.0',
+290 silly addNameRange     '0.2.10',
+290 silly addNameRange     '0.4.0',
+290 silly addNameRange     '0.4.1',
+290 silly addNameRange     '0.4.2',
+290 silly addNameRange     '0.4.4',
+290 silly addNameRange     '0.5.0',
+290 silly addNameRange     '0.5.1',
+290 silly addNameRange     '0.5.2',
+290 silly addNameRange     '0.5.3',
+290 silly addNameRange     '0.6.0',
+290 silly addNameRange     '0.7.0',
+290 silly addNameRange     '0.7.1',
+290 silly addNameRange     '0.7.2',
+290 silly addNameRange     '0.8.0',
+290 silly addNameRange     '0.8.1',
+290 silly addNameRange     '0.8.2',
+290 silly addNameRange     '0.8.3',
+290 silly addNameRange     '0.8.4',
+290 silly addNameRange     '0.8.5',
+290 silly addNameRange     '0.8.6',
+290 silly addNameRange     '0.8.7',
+290 silly addNameRange     '0.8.8',
+290 silly addNameRange     '0.8.9',
+290 silly addNameRange     '0.8.10',
+290 silly addNameRange     '0.8.11',
+290 silly addNameRange     '0.8.12',
+290 silly addNameRange     '0.9.0',
+290 silly addNameRange     '0.9.1',
+290 silly addNameRange     '0.9.2',
+290 silly addNameRange     '0.9.3',
+290 silly addNameRange     '0.9.4',
+290 silly addNameRange     '0.9.5',
+290 silly addNameRange     '0.9.6',
+290 silly addNameRange     '0.9.7',
+290 silly addNameRange     '1.0.0',
+290 silly addNameRange     '1.0.1',
+290 silly addNameRange     '2.0.0',
+290 silly addNameRange     '2.0.1',
+290 silly addNameRange     '2.0.2',
+290 silly addNameRange     '1.1.0',
+290 silly addNameRange     '1.1.1',
+290 silly addNameRange     '1.1.2',
+290 silly addNameRange     '2.0.3',
+290 silly addNameRange     '1.2.0',
+290 silly addNameRange     '1.2.1',
+290 silly addNameRange     '1.3.0',
+290 silly addNameRange     '1.4.0',
+290 silly addNameRange     '1.4.1' ] ]
+291 verbose addNamed q@1.4.1
+292 silly addNamed semver.valid 1.4.1
+293 silly addNamed semver.validRange 1.4.1
+294 verbose afterAdd /Users/patrickkunka/.npm/mongoose-pagination/1.0.0/package/package.json written
+295 silly cache afterAdd q@1.4.1
+296 verbose afterAdd /Users/patrickkunka/.npm/q/1.4.1/package/package.json not in flight; writing
+297 silly cache afterAdd typed-object@1.0.0
+298 verbose afterAdd /Users/patrickkunka/.npm/typed-object/1.0.0/package/package.json not in flight; writing
+299 verbose afterAdd /Users/patrickkunka/.npm/q/1.4.1/package/package.json written
+300 verbose afterAdd /Users/patrickkunka/.npm/typed-object/1.0.0/package/package.json written
+301 http fetch 200 https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.2.10.tgz
+302 http fetch 200 https://registry.npmjs.org/mongoose/-/mongoose-4.1.11.tgz
+303 silly fetchAndShaCheck shasum c73a49c2299a50763f50b65100fe97882aee2dfe
+304 verbose addTmpTarball /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/npm-61302-ff4df55c/registry.npmjs.org/aws-sdk/-/aws-sdk-2.2.10.tgz not in flight; adding
+305 verbose addTmpTarball already have metadata; skipping unpack for aws-sdk@2.2.10
+306 silly cache afterAdd aws-sdk@2.2.10
+307 verbose afterAdd /Users/patrickkunka/.npm/aws-sdk/2.2.10/package/package.json not in flight; writing
+308 silly fetchAndShaCheck shasum bab2bf70748bf50265d96050453bae5e697b2dd3
+309 verbose afterAdd /Users/patrickkunka/.npm/aws-sdk/2.2.10/package/package.json written
+310 verbose addTmpTarball /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/npm-61302-ff4df55c/registry.npmjs.org/mongoose/-/mongoose-4.1.11.tgz not in flight; adding
+311 verbose addTmpTarball already have metadata; skipping unpack for mongoose@4.1.11
+312 silly cache afterAdd mongoose@4.1.11
+313 verbose afterAdd /Users/patrickkunka/.npm/mongoose/4.1.11/package/package.json not in flight; writing
+314 verbose afterAdd /Users/patrickkunka/.npm/mongoose/4.1.11/package/package.json written
+315 http 200 https://registry.npmjs.org/dynamodb-marshaler
+316 silly get cb [ 200,
+316 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+316 silly get     etag: '"7C6JEQF4EMNM16EK12Y61G6BV"',
+316 silly get     'content-type': 'application/json',
+316 silly get     'cache-control': 'max-age=60',
+316 silly get     'content-length': '25433',
+316 silly get     'accept-ranges': 'bytes',
+316 silly get     date: 'Mon, 19 Oct 2015 09:08:26 GMT',
+316 silly get     via: '1.1 varnish',
+316 silly get     connection: 'keep-alive',
+316 silly get     'x-served-by': 'cache-lcy1123-LCY',
+316 silly get     'x-cache': 'MISS',
+316 silly get     'x-cache-hits': '0',
+316 silly get     'x-timer': 'S1445245706.026510,VS0,VE870',
+316 silly get     vary: 'Accept' } ]
+317 verbose get saving dynamodb-marshaler to /Users/patrickkunka/.npm/registry.npmjs.org/dynamodb-marshaler/.cache.json
+318 silly addNameRange number 2 { name: 'dynamodb-marshaler',
+318 silly addNameRange   range: '>=1.2.1 <2.0.0',
+318 silly addNameRange   hasData: true }
+319 silly addNameRange versions [ 'dynamodb-marshaler',
+319 silly addNameRange   [ '0.0.0',
+319 silly addNameRange     '0.0.1',
+319 silly addNameRange     '0.0.2',
+319 silly addNameRange     '0.0.3',
+319 silly addNameRange     '0.0.4',
+319 silly addNameRange     '0.1.0',
+319 silly addNameRange     '0.1.1',
+319 silly addNameRange     '1.0.0',
+319 silly addNameRange     '1.1.0',
+319 silly addNameRange     '1.1.1',
+319 silly addNameRange     '1.1.2',
+319 silly addNameRange     '1.1.3',
+319 silly addNameRange     '1.2.0',
+319 silly addNameRange     '1.2.1' ] ]
+320 verbose addNamed dynamodb-marshaler@1.2.1
+321 silly addNamed semver.valid 1.2.1
+322 silly addNamed semver.validRange 1.2.1
+323 silly cache afterAdd dynamodb-marshaler@1.2.1
+324 verbose afterAdd /Users/patrickkunka/.npm/dynamodb-marshaler/1.2.1/package/package.json not in flight; writing
+325 verbose afterAdd /Users/patrickkunka/.npm/dynamodb-marshaler/1.2.1/package/package.json written
+326 silly install resolved [ { name: 'node-lambda',
+326 silly install resolved     version: '0.6.2',
+326 silly install resolved     description: 'Command line tool for locally running and remotely deploying your node.js applications to Amazon Lambda.',
+326 silly install resolved     main: 'lib/main.js',
+326 silly install resolved     directories: { test: 'test' },
+326 silly install resolved     scripts: { test: 'mocha test/*.js' },
+326 silly install resolved     bin: { 'node-lambda': './bin/node-lambda' },
+326 silly install resolved     repository:
+326 silly install resolved      { type: 'git',
+326 silly install resolved        url: 'git://github.com/rebelmail/node-lambda.git' },
+326 silly install resolved     keywords:
+326 silly install resolved      [ 'lambda',
+326 silly install resolved        'aws',
+326 silly install resolved        'amazon',
+326 silly install resolved        'amazon-lambda',
+326 silly install resolved        'aws-lambda',
+326 silly install resolved        'lambda-node',
+326 silly install resolved        'deploy',
+326 silly install resolved        'deployment' ],
+326 silly install resolved     author: { name: 'motdotla' },
+326 silly install resolved     license: 'BSD',
+326 silly install resolved     devDependencies:
+326 silly install resolved      { chai: '^2.0.0',
+326 silly install resolved        hoek: '^2.11.1',
+326 silly install resolved        lodash: '^3.2.0',
+326 silly install resolved        mocha: '',
+326 silly install resolved        should: '' },
+326 silly install resolved     dependencies:
+326 silly install resolved      { async: '^0.9.0',
+326 silly install resolved        'aws-sdk': '^2.1.24',
+326 silly install resolved        commander: '^2.5.0',
+326 silly install resolved        dotenv: '^0.4.0',
+326 silly install resolved        'node-uuid': '^1.4.2',
+326 silly install resolved        'node-zip': '^1.1.0',
+326 silly install resolved        rimraf: '^2.2.8',
+326 silly install resolved        wrench: '^1.5.8' },
+326 silly install resolved     gitHead: '5502b021faf4b70da0a637c60f02978e1b5747f7',
+326 silly install resolved     bugs: { url: 'https://github.com/rebelmail/node-lambda/issues' },
+326 silly install resolved     homepage: 'https://github.com/rebelmail/node-lambda',
+326 silly install resolved     _id: 'node-lambda@0.6.2',
+326 silly install resolved     _shasum: '49aa312fe7d8175294652faeaa72df51aa78593c',
+326 silly install resolved     _from: 'node-lambda@>=0.6.2 <0.7.0',
+326 silly install resolved     _npmVersion: '2.5.1',
+326 silly install resolved     _nodeVersion: '0.12.0',
+326 silly install resolved     _npmUser: { name: 'motdotla', email: 'mot@mot.la' },
+326 silly install resolved     maintainers: [ [Object], [Object], [Object] ],
+326 silly install resolved     dist:
+326 silly install resolved      { shasum: '49aa312fe7d8175294652faeaa72df51aa78593c',
+326 silly install resolved        tarball: 'http://registry.npmjs.org/node-lambda/-/node-lambda-0.6.2.tgz' },
+326 silly install resolved     _resolved: 'https://registry.npmjs.org/node-lambda/-/node-lambda-0.6.2.tgz',
+326 silly install resolved     readme: 'ERROR: No README data found!' },
+326 silly install resolved   { name: 'mongoose-q',
+326 silly install resolved     version: '0.0.17',
+326 silly install resolved     description: 'kriskowal\'s Q support for mongoose',
+326 silly install resolved     author: { name: 'Dongsu Jang', email: 'iolothebard@gmail.com' },
+326 silly install resolved     repository: { type: 'git', url: 'git://git@github.com/iolo/mongoose-q.git' },
+326 silly install resolved     license: 'MIT',
+326 silly install resolved     engines: { node: '>=0.10', iojs: '>=1.0' },
+326 silly install resolved     dependencies: { q: '~1.0.1', mongoose: '>=3.8.25' },
+326 silly install resolved     devDependencies:
+326 silly install resolved      { debug: 'latest',
+326 silly install resolved        mocha: 'latest',
+326 silly install resolved        'pow-mongodb-fixtures': 'latest',
+326 silly install resolved        grunt: 'latest',
+326 silly install resolved        'grunt-contrib-jshint': 'latest',
+326 silly install resolved        'grunt-mocha-test': 'latest' },
+326 silly install resolved     scripts: { test: 'mocha tests/*_test.js' },
+326 silly install resolved     gitHead: '05cdc698f6c31d0e53cab5e22530024ac3c97399',
+326 silly install resolved     bugs: { url: 'https://github.com/iolo/mongoose-q/issues' },
+326 silly install resolved     homepage: 'https://github.com/iolo/mongoose-q',
+326 silly install resolved     _id: 'mongoose-q@0.0.17',
+326 silly install resolved     _shasum: 'b238b977c8f6e5112cfff9dab16972037283d6d4',
+326 silly install resolved     _from: 'mongoose-q@>=0.0.13 <0.1.0',
+326 silly install resolved     _npmVersion: '2.7.4',
+326 silly install resolved     _nodeVersion: '0.12.1',
+326 silly install resolved     _npmUser: { name: 'iolo', email: 'iolothebard@gmail.com' },
+326 silly install resolved     maintainers: [ [Object] ],
+326 silly install resolved     dist:
+326 silly install resolved      { shasum: 'b238b977c8f6e5112cfff9dab16972037283d6d4',
+326 silly install resolved        tarball: 'http://registry.npmjs.org/mongoose-q/-/mongoose-q-0.0.17.tgz' },
+326 silly install resolved     directories: {},
+326 silly install resolved     _resolved: 'https://registry.npmjs.org/mongoose-q/-/mongoose-q-0.0.17.tgz',
+326 silly install resolved     readme: 'ERROR: No README data found!' },
+326 silly install resolved   { name: 'atob',
+326 silly install resolved     homepage: 'https://github.com/coolaj86/node-browser-compat',
+326 silly install resolved     description: 'atob for Node.JS and Linux / Mac / Windows CLI (it\'s a one-liner)',
+326 silly install resolved     repository:
+326 silly install resolved      { type: 'git',
+326 silly install resolved        url: 'git://github.com/coolaj86/node-browser-compat.git' },
+326 silly install resolved     keywords: [ 'atob', 'browser' ],
+326 silly install resolved     author:
+326 silly install resolved      { name: 'AJ ONeal',
+326 silly install resolved        email: 'coolaj86@gmail.com',
+326 silly install resolved        url: 'http://coolaj86.info' },
+326 silly install resolved     engines: { node: '>= 0.4.0' },
+326 silly install resolved     main: 'index',
+326 silly install resolved     bin: { atob: 'bin/atob.js' },
+326 silly install resolved     license: 'Apache2',
+326 silly install resolved     version: '1.1.2',
+326 silly install resolved     bugs: { url: 'https://github.com/coolaj86/node-browser-compat/issues' },
+326 silly install resolved     _id: 'atob@1.1.2',
+326 silly install resolved     dist:
+326 silly install resolved      { shasum: 'f7f25136b67b48250f8ceb3bf709e5428c11db54',
+326 silly install resolved        tarball: 'http://registry.npmjs.org/atob/-/atob-1.1.2.tgz' },
+326 silly install resolved     _from: 'atob@>=1.1.2 <2.0.0',
+326 silly install resolved     _npmVersion: '1.3.24',
+326 silly install resolved     _npmUser: { name: 'coolaj86', email: 'coolaj86@gmail.com' },
+326 silly install resolved     maintainers: [ [Object] ],
+326 silly install resolved     directories: {},
+326 silly install resolved     _shasum: 'f7f25136b67b48250f8ceb3bf709e5428c11db54',
+326 silly install resolved     _resolved: 'https://registry.npmjs.org/atob/-/atob-1.1.2.tgz',
+326 silly install resolved     readme: 'ERROR: No README data found!' },
+326 silly install resolved   { author: { name: 'Patrik Simek', url: 'https://patriksimek.cz' },
+326 silly install resolved     name: 'mssql',
+326 silly install resolved     description: 'An easy-to-use MSSQL database connector for Node.js.',
+326 silly install resolved     keywords:
+326 silly install resolved      [ 'database',
+326 silly install resolved        'mssql',
+326 silly install resolved        'sql',
+326 silly install resolved        'msnodesql',
+326 silly install resolved        'sqlserver',
+326 silly install resolved        'tds',
+326 silly install resolved        'node-tds',
+326 silly install resolved        'tedious',
+326 silly install resolved        'node-sqlserver',
+326 silly install resolved        'sqlserver' ],
+326 silly install resolved     version: '2.3.1',
+326 silly install resolved     main: 'index.js',
+326 silly install resolved     repository:
+326 silly install resolved      { type: 'git',
+326 silly install resolved        url: 'git+https://github.com/patriksimek/node-mssql.git' },
+326 silly install resolved     license: 'MIT',
+326 silly install resolved     dependencies:
+326 silly install resolved      { tedious: '~1.12.3',
+326 silly install resolved        'generic-pool': '^2.2.0',
+326 silly install resolved        promise: '^7.0.1' },
+326 silly install resolved     devDependencies: { 'coffee-script': '^1.9.3', mocha: '^2.1.0' },
+326 silly install resolved     engines: { node: '>=0.10' },
+326 silly install resolved     scripts:
+326 silly install resolved      { prepublish: 'coffee --compile --output ./lib ./src',
+326 silly install resolved        compile: 'coffee --compile --output ./lib ./src',
+326 silly install resolved        test: 'mocha test/unit',
+326 silly install resolved        'test-tedious': 'mocha test/integration -g tedious',
+326 silly install resolved        'test-msnodesql': 'mocha test/integration -g msnodesql',
+326 silly install resolved        'test-tds': 'mocha test/integration -g tds',
+326 silly install resolved        'test-cli': 'mocha test/integration -g cli' },
+326 silly install resolved     bin: { mssql: './bin/mssql' },
+326 silly install resolved     gitHead: '552ea0518ff860466b295670e7e2b305ab603f14',
+326 silly install resolved     bugs: { url: 'https://github.com/patriksimek/node-mssql/issues' },
+326 silly install resolved     homepage: 'https://github.com/patriksimek/node-mssql#readme',
+326 silly install resolved     _id: 'mssql@2.3.1',
+326 silly install resolved     _shasum: '4c7601a410d7f4d80fb23e1574651c1c7b85df71',
+326 silly install resolved     _from: 'mssql@>=2.3.1 <3.0.0',
+326 silly install resolved     _npmVersion: '2.14.3',
+326 silly install resolved     _nodeVersion: '4.1.0',
+326 silly install resolved     _npmUser: { name: 'patriksimek', email: 'patrik@patriksimek.cz' },
+326 silly install resolved     maintainers: [ [Object] ],
+326 silly install resolved     dist:
+326 silly install resolved      { shasum: '4c7601a410d7f4d80fb23e1574651c1c7b85df71',
+326 silly install resolved        tarball: 'http://registry.npmjs.org/mssql/-/mssql-2.3.1.tgz' },
+326 silly install resolved     directories: {},
+326 silly install resolved     _resolved: 'https://registry.npmjs.org/mssql/-/mssql-2.3.1.tgz',
+326 silly install resolved     readme: 'ERROR: No README data found!' },
+326 silly install resolved   { name: 'mongoose-pagination',
+326 silly install resolved     version: '1.0.0',
+326 silly install resolved     description: 'Mongoose Query Pagination',
+326 silly install resolved     main: './lib/pagination.js',
+326 silly install resolved     dependencies: { mongoose: '>=2.7.0' },
+326 silly install resolved     devDependencies: { chai: '~1.3.0', 'coffee-script': '~1.3.3', mocha: '~1.6.0' },
+326 silly install resolved     directories: { test: 'test' },
+326 silly install resolved     scripts: { test: './node_modules/mocha/bin/mocha --compilers coffee:coffee-script' },
+326 silly install resolved     keywords: [ 'mongoose', 'paginate', 'pagination', 'sort', 'page', 'limit' ],
+326 silly install resolved     author:
+326 silly install resolved      { name: 'Moveline Inc.',
+326 silly install resolved        email: 'info@moveline.com',
+326 silly install resolved        url: 'https://www.moveline.com' },
+326 silly install resolved     contributors: [ [Object] ],
+326 silly install resolved     repository:
+326 silly install resolved      { type: 'git',
+326 silly install resolved        url: 'https://github.com/Moveline/mongoose-pagination.git' },
+326 silly install resolved     license: 'MIT',
+326 silly install resolved     readme: '# mongoose-pagination [![Build Status](https://secure.travis-ci.org/Moveline/mongoose-pagination.png)](http://travis-ci.org/Moveline/mongoose-pagination)\n\nMongoose Query Pagination\n\n## Installation\n\n```bash\n$ npm install mongoose-pagination\n```\n\n## Usage\n\n```javascript\nrequire \'mongoose-pagination\'\n\nmodel\n  .find()\n  .paginate(1, 10)\n  .exec(function(err, docs) {\n    console.log(\'docs: \', docs)\n  });\n\nmodel\n  .find()\n  .paginate(1, 10, function(err, docs, total) {\n    console.log(\'total: \', total, \'docs: \', docs)\n  });\n```\n\n## Tests\n\n```bash\n$ npm test\n```\n\n## Authors [Christopher Garvis][0] & [Moveline][1]\n\n[0]: http://christophergarvis.com\n[1]: http://www.moveline.com\n\n## License\n\nMIT\n',
+326 silly install resolved     _id: 'mongoose-pagination@1.0.0',
+326 silly install resolved     dist:
+326 silly install resolved      { shasum: '41ffdea351789a2da463ad92f707c761632f224b',
+326 silly install resolved        tarball: 'http://registry.npmjs.org/mongoose-pagination/-/mongoose-pagination-1.0.0.tgz' },
+326 silly install resolved     maintainers: [ [Object] ],
+326 silly install resolved     _shasum: '41ffdea351789a2da463ad92f707c761632f224b',
+326 silly install resolved     _resolved: 'https://registry.npmjs.org/mongoose-pagination/-/mongoose-pagination-1.0.0.tgz',
+326 silly install resolved     _from: 'mongoose-pagination@>=1.0.0 <2.0.0',
+326 silly install resolved     bugs: { url: 'https://github.com/Moveline/mongoose-pagination/issues' },
+326 silly install resolved     homepage: 'https://github.com/Moveline/mongoose-pagination' },
+326 silly install resolved   { name: 'q',
+326 silly install resolved     version: '1.4.1',
+326 silly install resolved     description: 'A library for promises (CommonJS/Promises/A,B,D)',
+326 silly install resolved     homepage: 'https://github.com/kriskowal/q',
+326 silly install resolved     author:
+326 silly install resolved      { name: 'Kris Kowal',
+326 silly install resolved        email: 'kris@cixar.com',
+326 silly install resolved        url: 'https://github.com/kriskowal' },
+326 silly install resolved     keywords:
+326 silly install resolved      [ 'q',
+326 silly install resolved        'promise',
+326 silly install resolved        'promises',
+326 silly install resolved        'promises-a',
+326 silly install resolved        'promises-aplus',
+326 silly install resolved        'deferred',
+326 silly install resolved        'future',
+326 silly install resolved        'async',
+326 silly install resolved        'flow control',
+326 silly install resolved        'fluent',
+326 silly install resolved        'browser',
+326 silly install resolved        'node' ],
+326 silly install resolved     contributors: [ [Object], [Object], [Object] ],
+326 silly install resolved     bugs: { url: 'http://github.com/kriskowal/q/issues' },
+326 silly install resolved     license:
+326 silly install resolved      { type: 'MIT',
+326 silly install resolved        url: 'http://github.com/kriskowal/q/raw/master/LICENSE' },
+326 silly install resolved     main: 'q.js',
+326 silly install resolved     files: [ 'LICENSE', 'q.js', 'queue.js' ],
+326 silly install resolved     repository: { type: 'git', url: 'git://github.com/kriskowal/q.git' },
+326 silly install resolved     engines: { node: '>=0.6.0', teleport: '>=0.2.0' },
+326 silly install resolved     dependencies: {},
+326 silly install resolved     devDependencies:
+326 silly install resolved      { cover: '*',
+326 silly install resolved        grunt: '~0.4.1',
+326 silly install resolved        'grunt-cli': '~0.1.9',
+326 silly install resolved        'grunt-contrib-uglify': '~0.9.1',
+326 silly install resolved        'jasmine-node': '1.11.0',
+326 silly install resolved        jshint: '~2.1.9',
+326 silly install resolved        matcha: '~0.2.0',
+326 silly install resolved        opener: '*',
+326 silly install resolved        'promises-aplus-tests': '1.x' },
+326 silly install resolved     scripts:
+326 silly install resolved      { test: 'jasmine-node spec && promises-aplus-tests spec/aplus-adapter',
+326 silly install resolved        'test-browser': 'opener spec/q-spec.html',
+326 silly install resolved        benchmark: 'matcha',
+326 silly install resolved        lint: 'jshint q.js',
+326 silly install resolved        cover: 'cover run jasmine-node spec && cover report html && opener cover_html/index.html',
+326 silly install resolved        minify: 'grunt',
+326 silly install resolved        prepublish: 'grunt' },
+326 silly install resolved     overlay: { teleport: [Object] },
+326 silly install resolved     directories: { test: './spec' },
+326 silly install resolved     gitHead: 'd373079d3620152e3d60e82f27265a09ee0e81bd',
+326 silly install resolved     _id: 'q@1.4.1',
+326 silly install resolved     _shasum: '55705bcd93c5f3673530c2c2cbc0c2b3addc286e',
+326 silly install resolved     _from: 'q@>=1.4.1 <2.0.0',
+326 silly install resolved     _npmVersion: '2.8.3',
+326 silly install resolved     _nodeVersion: '1.8.1',
+326 silly install resolved     _npmUser: { name: 'kriskowal', email: 'kris.kowal@cixar.com' },
+326 silly install resolved     maintainers: [ [Object], [Object] ],
+326 silly install resolved     dist:
+326 silly install resolved      { shasum: '55705bcd93c5f3673530c2c2cbc0c2b3addc286e',
+326 silly install resolved        tarball: 'http://registry.npmjs.org/q/-/q-1.4.1.tgz' },
+326 silly install resolved     _resolved: 'https://registry.npmjs.org/q/-/q-1.4.1.tgz',
+326 silly install resolved     readme: 'ERROR: No README data found!' },
+326 silly install resolved   { name: 'typed-object',
+326 silly install resolved     author: { name: 'KunkaLabs' },
+326 silly install resolved     repository:
+326 silly install resolved      { type: 'git',
+326 silly install resolved        url: 'git://github.com/kunkalabs/typed-object.git' },
+326 silly install resolved     license:
+326 silly install resolved      { type: 'GPLv3',
+326 silly install resolved        url: 'http://www.gnu.org/licenses/gpl-3.0.en.html' },
+326 silly install resolved     version: '1.0.0',
+326 silly install resolved     main: 'src/typed-object.js',
+326 silly install resolved     description: 'Create strict, strongly-typed JavaScript objects.',
+326 silly install resolved     devDependencies:
+326 silly install resolved      { gulp: '^3.8.8',
+326 silly install resolved        'gulp-jscs': '^1.5.1',
+326 silly install resolved        'gulp-jshint': '^1.8.5',
+326 silly install resolved        'gulp-sourcemaps': '^1.5.2',
+326 silly install resolved        'gulp-uglify': '~1.0.1',
+326 silly install resolved        'jshint-stylish': '~1.0.0' },
+326 silly install resolved     gitHead: '1d9f6d09bc6bf72d1437ee7044b47b25e6896c1a',
+326 silly install resolved     bugs: { url: 'https://github.com/kunkalabs/typed-object/issues' },
+326 silly install resolved     homepage: 'https://github.com/kunkalabs/typed-object',
+326 silly install resolved     _id: 'typed-object@1.0.0',
+326 silly install resolved     scripts: {},
+326 silly install resolved     _shasum: 'f4b05f1a83e0257d328d3baf7bfd918526bf5cec',
+326 silly install resolved     _from: 'typed-object@1.0.0',
+326 silly install resolved     _npmVersion: '2.5.1',
+326 silly install resolved     _nodeVersion: '0.12.0',
+326 silly install resolved     _npmUser: { name: 'kunkalabs', email: 'info@kunkalabs.com' },
+326 silly install resolved     dist:
+326 silly install resolved      { shasum: 'f4b05f1a83e0257d328d3baf7bfd918526bf5cec',
+326 silly install resolved        tarball: 'http://registry.npmjs.org/typed-object/-/typed-object-1.0.0.tgz' },
+326 silly install resolved     maintainers: [ [Object] ],
+326 silly install resolved     directories: {},
+326 silly install resolved     _resolved: 'https://registry.npmjs.org/typed-object/-/typed-object-1.0.0.tgz',
+326 silly install resolved     readme: 'ERROR: No README data found!' },
+326 silly install resolved   { name: 'aws-sdk',
+326 silly install resolved     description: 'AWS SDK for JavaScript',
+326 silly install resolved     version: '2.2.10',
+326 silly install resolved     author: { name: 'Amazon Web Services', url: 'http://aws.amazon.com/' },
+326 silly install resolved     homepage: 'https://github.com/aws/aws-sdk-js',
+326 silly install resolved     contributors: [ [Object], [Object] ],
+326 silly install resolved     devDependencies:
+326 silly install resolved      { 'repl.history': '*',
+326 silly install resolved        semver: '*',
+326 silly install resolved        'coffee-script': '1.6.3',
+326 silly install resolved        eslint: '*',
+326 silly install resolved        cucumber: '*',
+326 silly install resolved        coffeeify: '*',
+326 silly install resolved        browserify: '3.x',
+326 silly install resolved        'uglify-js': '2.x',
+326 silly install resolved        mocha: '*',
+326 silly install resolved        chai: '*',
+326 silly install resolved        istanbul: '*',
+326 silly install resolved        coveralls: '2.x' },
+326 silly install resolved     dependencies: { sax: '0.5.3', xml2js: '0.2.8', xmlbuilder: '0.4.2' },
+326 silly install resolved     main: 'lib/aws.js',
+326 silly install resolved     browser: 'lib/browser.js',
+326 silly install resolved     browserify: { transform: './dist-tools/transform.js' },
+326 silly install resolved     directories: { lib: 'lib' },
+326 silly install resolved     engines: { node: '>= 0.8.0' },
+326 silly install resolved     repository: { type: 'git', url: 'git://github.com/aws/aws-sdk-js.git' },
+326 silly install resolved     bugs: { url: 'http://github.com/aws/aws-sdk-js/issues' },
+326 silly install resolved     license: 'Apache-2.0',
+326 silly install resolved     keywords:
+326 silly install resolved      [ 'api',
+326 silly install resolved        'amazon',
+326 silly install resolved        'aws',
+326 silly install resolved        'ec2',
+326 silly install resolved        'simpledb',
+326 silly install resolved        's3',
+326 silly install resolved        'sqs',
+326 silly install resolved        'ses',
+326 silly install resolved        'sns',
+326 silly install resolved        'route53',
+326 silly install resolved        'rds',
+326 silly install resolved        'elasticache',
+326 silly install resolved        'cloudfront',
+326 silly install resolved        'fps',
+326 silly install resolved        'cloudformation',
+326 silly install resolved        'cloudwatch',
+326 silly install resolved        'dynamodb',
+326 silly install resolved        'iam',
+326 silly install resolved        'swf',
+326 silly install resolved        'autoscaling',
+326 silly install resolved        'cloudsearch',
+326 silly install resolved        'elb',
+326 silly install resolved        'loadbalancing',
+326 silly install resolved        'emr',
+326 silly install resolved        'mapreduce',
+326 silly install resolved        'importexport',
+326 silly install resolved        'storagegateway',
+326 silly install resolved        'workflow',
+326 silly install resolved        'ebs',
+326 silly install resolved        'vpc',
+326 silly install resolved        'beanstalk',
+326 silly install resolved        'glacier',
+326 silly install resolved        'kinesis',
+326 silly install resolved        'cloudtrail',
+326 silly install resolved        'waf' ],
+326 silly install resolved     scripts:
+326 silly install resolved      { test: 'npm -s run-script lint && npm -s run-script unit && npm -s run-script buildertest && npm -s run-script browsertest && ([ -f configuration ] && npm -s run-script integration || true)',
+326 silly install resolved        unit: 'istanbul `[ $COVERAGE ] && echo \'cover _mocha\' || echo \'test mocha\'` -- test test/json test/model test/protocol test/query test/services test/signers test/xml test/s3',
+326 silly install resolved        coverage: 'istanbul cover ./node_modules/mocha/bin/_mocha -- test test/json test/model test/protocol test/query test/services test/signers test/xml',
+326 silly install resolved        browsertest: 'rake browser:test',
+326 silly install resolved        buildertest: 'mocha --compilers coffee:coffee-script -s 1000 -t 10000 dist-tools/test',
+326 silly install resolved        integration: 'cucumber.js',
+326 silly install resolved        lint: 'eslint lib dist-tools/*.js',
+326 silly install resolved        console: './scripts/console' },
+326 silly install resolved     gitHead: 'fe184e5064c3daef261c9ff95ba9282f854c6ae3',
+326 silly install resolved     _id: 'aws-sdk@2.2.10',
+326 silly install resolved     _shasum: 'c73a49c2299a50763f50b65100fe97882aee2dfe',
+326 silly install resolved     _from: 'aws-sdk@>=2.1.24 <3.0.0',
+326 silly install resolved     _resolved: 'https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.2.10.tgz',
+326 silly install resolved     _npmVersion: '2.14.2',
+326 silly install resolved     _nodeVersion: '4.0.0',
+326 silly install resolved     _npmUser: { name: 'aws', email: 'aws-sdk-js@amazon.com' },
+326 silly install resolved     maintainers: [ [Object] ],
+326 silly install resolved     dist:
+326 silly install resolved      { shasum: 'c73a49c2299a50763f50b65100fe97882aee2dfe',
+326 silly install resolved        tarball: 'http://registry.npmjs.org/aws-sdk/-/aws-sdk-2.2.10.tgz' } },
+326 silly install resolved   { name: 'mongoose',
+326 silly install resolved     description: 'Mongoose MongoDB ODM',
+326 silly install resolved     version: '4.1.11',
+326 silly install resolved     author: { name: 'Guillermo Rauch', email: 'guillermo@learnboost.com' },
+326 silly install resolved     keywords:
+326 silly install resolved      [ 'mongodb',
+326 silly install resolved        'document',
+326 silly install resolved        'model',
+326 silly install resolved        'schema',
+326 silly install resolved        'database',
+326 silly install resolved        'odm',
+326 silly install resolved        'data',
+326 silly install resolved        'datastore',
+326 silly install resolved        'query',
+326 silly install resolved        'nosql',
+326 silly install resolved        'orm',
+326 silly install resolved        'db' ],
+326 silly install resolved     license: 'MIT',
+326 silly install resolved     dependencies:
+326 silly install resolved      { async: '0.9.0',
+326 silly install resolved        bson: '~0.4',
+326 silly install resolved        'hooks-fixed': '1.1.0',
+326 silly install resolved        kareem: '1.0.1',
+326 silly install resolved        mongodb: '2.0.45',
+326 silly install resolved        mpath: '0.1.1',
+326 silly install resolved        mpromise: '0.5.4',
+326 silly install resolved        mquery: '1.6.3',
+326 silly install resolved        ms: '0.1.0',
+326 silly install resolved        muri: '1.0.0',
+326 silly install resolved        'regexp-clone': '0.0.1',
+326 silly install resolved        sliced: '0.0.5' },
+326 silly install resolved     devDependencies:
+326 silly install resolved      { acquit: '0.3.0',
+326 silly install resolved        'acquit-ignore': '0.0.1',
+326 silly install resolved        benchmark: '1.0.0',
+326 silly install resolved        bluebird: '2.9.34',
+326 silly install resolved        co: '3.1.0',
+326 silly install resolved        dox: '0.3.1',
+326 silly install resolved        eslint: '1.5.0',
+326 silly install resolved        'highlight.js': '7.0.1',
+326 silly install resolved        istanbul: '^0.3.13',
+326 silly install resolved        jade: '0.26.3',
+326 silly install resolved        markdown: '0.3.1',
+326 silly install resolved        marked: '0.3.2',
+326 silly install resolved        mocha: '1.20.0',
+326 silly install resolved        'node-static': '0.5.9',
+326 silly install resolved        open: '0.0.3',
+326 silly install resolved        q: '1.4.1',
+326 silly install resolved        tbd: '0.6.4',
+326 silly install resolved        'uglify-js': '2.4.24',
+326 silly install resolved        underscore: '1.5.2' },
+326 silly install resolved     browserDependencies:
+326 silly install resolved      { browserify: '4.1.10',
+326 silly install resolved        karma: '0.12.16',
+326 silly install resolved        'karma-chai': '0.1.0',
+326 silly install resolved        'karma-mocha': '0.1.4',
+326 silly install resolved        'karma-chrome-launcher': '0.1.4',
+326 silly install resolved        'karma-sauce-launcher': '0.2.8' },
+326 silly install resolved     directories: { lib: './lib/mongoose' },
+326 silly install resolved     scripts:
+326 silly install resolved      { 'install-browser': 'npm install `node format_deps.js`',
+326 silly install resolved        test: 'mocha --async-only test/*.test.js test/**/*.test.js',
+326 silly install resolved        'test-cov': 'istanbul cover _mocha --async-only test/*.test.js' },
+326 silly install resolved     main: './index.js',
+326 silly install resolved     engines: { node: '>=0.6.19' },
+326 silly install resolved     bugs:
+326 silly install resolved      { url: 'https://github.com/Automattic/mongoose/issues/new',
+326 silly install resolved        email: 'mongoose-orm@googlegroups.com' },
+326 silly install resolved     repository: { type: 'git', url: 'git://github.com/Automattic/mongoose.git' },
+326 silly install resolved     homepage: 'http://mongoosejs.com',
+326 silly install resolved     browser: 'lib/browser.js',
+326 silly install resolved     gitHead: '1f6aa7a91e36a8e6f7b8c1a45f2c87ba3eb71963',
+326 silly install resolved     _id: 'mongoose@4.1.11',
+326 silly install resolved     _shasum: 'bab2bf70748bf50265d96050453bae5e697b2dd3',
+326 silly install resolved     _from: 'mongoose@>=4.1.9 <5.0.0',
+326 silly install resolved     _npmVersion: '2.9.1',
+326 silly install resolved     _nodeVersion: '0.12.3',
+326 silly install resolved     _npmUser: { name: 'vkarpov15', email: 'val@karpov.io' },
+326 silly install resolved     dist:
+326 silly install resolved      { shasum: 'bab2bf70748bf50265d96050453bae5e697b2dd3',
+326 silly install resolved        tarball: 'http://registry.npmjs.org/mongoose/-/mongoose-4.1.11.tgz' },
+326 silly install resolved     maintainers: [ [Object], [Object], [Object], [Object], [Object] ],
+326 silly install resolved     _resolved: 'https://registry.npmjs.org/mongoose/-/mongoose-4.1.11.tgz' },
+326 silly install resolved   { name: 'dynamodb-marshaler',
+326 silly install resolved     version: '1.2.1',
+326 silly install resolved     description: 'Translates sane javascript objects (and JSON) into DynamoDb format and vice versa.',
+326 silly install resolved     main: 'dynamodb-marshaler.js',
+326 silly install resolved     repository:
+326 silly install resolved      { type: 'git',
+326 silly install resolved        url: 'git://github.com/CascadeEnergy/dynamoDb-marshaler.git' },
+326 silly install resolved     scripts:
+326 silly install resolved      { test: 'gulp test',
+326 silly install resolved        'browser-build': 'browserify src/dynamodb-marshaler.js --standalone dynamodb-marshaler -t babelify --outfile dist/dynamodb-marshaler.js' },
+326 silly install resolved     author: '',
+326 silly install resolved     license: 'MIT',
+326 silly install resolved     devDependencies:
+326 silly install resolved      { babel: '^5.2.17',
+326 silly install resolved        babelify: '^6.0.2',
+326 silly install resolved        browserify: '^9.0.8',
+326 silly install resolved        gulp: '^3.8.11',
+326 silly install resolved        'gulp-babel': '^5.1.0',
+326 silly install resolved        'gulp-file': '^0.2.0',
+326 silly install resolved        'gulp-istanbul': '^0.8.1',
+326 silly install resolved        'gulp-jshint': '^1.10.0',
+326 silly install resolved        'gulp-load-plugins': '^0.10.0',
+326 silly install resolved        'gulp-mocha': '^2.0.1',
+326 silly install resolved        'gulp-plumber': '^1.0.0',
+326 silly install resolved        'gulp-rename': '^1.2.2',
+326 silly install resolved        'gulp-streamify': '0.0.5',
+326 silly install resolved        'gulp-uglify': '^1.2.0',
+326 silly install resolved        isparta: '^3.0.3',
+326 silly install resolved        'jshint-stylish': '^1.0.1',
+326 silly install resolved        leche: '^2.1.1',
+326 silly install resolved        mocha: '^2.2.4',
+326 silly install resolved        sinon: '^1.14.1',
+326 silly install resolved        'vinyl-source-stream': '^1.1.0' },
+326 silly install resolved     dependencies:
+326 silly install resolved      { 'babel-runtime': '^5.2.17',
+326 silly install resolved        'dispatch-recursive': '^1.0.0',
+326 silly install resolved        lodash: '^3.7.0' },
+326 silly install resolved     engines: { node: '>=0.10.33' },
+326 silly install resolved     gitHead: '186ac64eb8a73850356ab65954ffdee5a4361e1a',
+326 silly install resolved     bugs: { url: 'https://github.com/CascadeEnergy/dynamoDb-marshaler/issues' },
+326 silly install resolved     homepage: 'https://github.com/CascadeEnergy/dynamoDb-marshaler#readme',
+326 silly install resolved     _id: 'dynamodb-marshaler@1.2.1',
+326 silly install resolved     _shasum: '110d09a1aba69a114545da9a787b0a55928d32f5',
+326 silly install resolved     _from: 'dynamodb-marshaler@>=1.2.1 <2.0.0',
+326 silly install resolved     _npmVersion: '2.11.3',
+326 silly install resolved     _nodeVersion: '2.3.1',
+326 silly install resolved     _npmUser: { name: 'nackjicholson', email: 'willieviseoae@gmail.com' },
+326 silly install resolved     dist:
+326 silly install resolved      { shasum: '110d09a1aba69a114545da9a787b0a55928d32f5',
+326 silly install resolved        tarball: 'http://registry.npmjs.org/dynamodb-marshaler/-/dynamodb-marshaler-1.2.1.tgz' },
+326 silly install resolved     maintainers: [ [Object] ],
+326 silly install resolved     directories: {},
+326 silly install resolved     _resolved: 'https://registry.npmjs.org/dynamodb-marshaler/-/dynamodb-marshaler-1.2.1.tgz',
+326 silly install resolved     readme: 'ERROR: No README data found!' } ]
+327 info install node-lambda@0.6.2 into /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018
+328 info install mongoose-q@0.0.17 into /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018
+329 info install atob@1.1.2 into /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018
+330 info install mssql@2.3.1 into /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018
+331 info install mongoose-pagination@1.0.0 into /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018
+332 info install q@1.4.1 into /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018
+333 info install typed-object@1.0.0 into /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018
+334 info install aws-sdk@2.2.10 into /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018
+335 info install mongoose@4.1.11 into /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018
+336 info install dynamodb-marshaler@1.2.1 into /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018
+337 info installOne node-lambda@0.6.2
+338 verbose installOne of node-lambda to /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018 not in flight; installing
+339 info installOne mongoose-q@0.0.17
+340 verbose installOne of mongoose-q to /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018 not in flight; installing
+341 info installOne atob@1.1.2
+342 verbose installOne of atob to /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018 not in flight; installing
+343 info installOne mssql@2.3.1
+344 verbose installOne of mssql to /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018 not in flight; installing
+345 info installOne mongoose-pagination@1.0.0
+346 verbose installOne of mongoose-pagination to /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018 not in flight; installing
+347 info installOne q@1.4.1
+348 verbose installOne of q to /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018 not in flight; installing
+349 info installOne typed-object@1.0.0
+350 verbose installOne of typed-object to /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018 not in flight; installing
+351 info installOne aws-sdk@2.2.10
+352 verbose installOne of aws-sdk to /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018 not in flight; installing
+353 info installOne mongoose@4.1.11
+354 verbose installOne of mongoose to /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018 not in flight; installing
+355 info installOne dynamodb-marshaler@1.2.1
+356 verbose installOne of dynamodb-marshaler to /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018 not in flight; installing
+357 warn locking Error: EACCES, open '/Users/patrickkunka/.npm/_locks/node-lambda-1c4467724e3977c5.lock'
+357 warn locking     at Error (native)
+357 warn locking  /Users/patrickkunka/.npm/_locks/node-lambda-1c4467724e3977c5.lock failed { [Error: EACCES, open '/Users/patrickkunka/.npm/_locks/node-lambda-1c4467724e3977c5.lock']
+357 warn locking   errno: -13,
+357 warn locking   code: 'EACCES',
+357 warn locking   path: '/Users/patrickkunka/.npm/_locks/node-lambda-1c4467724e3977c5.lock' }
+358 verbose stack Error: Attempt to unlock /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018/node_modules/node-lambda, which hasn't been locked
+358 verbose stack     at unlock (/usr/local/lib/node_modules/npm/lib/utils/locker.js:66:11)
+358 verbose stack     at cb (/usr/local/lib/node_modules/npm/lib/install.js:929:5)
+358 verbose stack     at /usr/local/lib/node_modules/npm/lib/install.js:933:20
+358 verbose stack     at /usr/local/lib/node_modules/npm/lib/utils/locker.js:40:9
+358 verbose stack     at cb (/usr/local/lib/node_modules/npm/node_modules/lockfile/lockfile.js:149:38)
+358 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/lockfile/lockfile.js:177:38
+358 verbose stack     at FSReqWrap.oncomplete (fs.js:99:15)
+359 verbose cwd /Users/patrickkunka/Sites/wacalytics-node
+360 error Darwin 14.1.0
+361 error argv "node" "/usr/local/bin/npm" "install" "--production" "--prefix" "/var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T//wacalytics-node-1445245705018"
+362 error node v0.12.0
+363 error npm  v2.5.1
+364 error Attempt to unlock /var/folders/mk/kgxl0mpd28v8xcsst7_933n40000gp/T/wacalytics-node-1445245705018/node_modules/node-lambda, which hasn't been locked
+365 error If you need help, you may report this error at:
+365 error     <http://github.com/npm/npm/issues>
+366 verbose exit [ 1, true ]
