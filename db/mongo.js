@@ -34,8 +34,6 @@ db = {
                 '/' +
                 process.env.MONGODB_NAME;
 
-        console.log('[wacalytics-mongo] Connecting to DB at:', connectionString);
-
         try {
             if (!db.connectionOpen) {
                 mongooseQ(mongoose);
@@ -191,6 +189,8 @@ _buildMongoQuery = function(query) {
                 };
         }
     });
+
+    console.log(mongoQuery);
 
     return mongoQuery;
 };
