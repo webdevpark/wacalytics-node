@@ -3,3 +3,4 @@ node_modules
 .env
 configs
 deploy.env
+test-query.js

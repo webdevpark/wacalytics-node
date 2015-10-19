@@ -13,30 +13,6 @@ var TypedObject     = require('typed-object'),
     wacRead         = null,
     testQuery       = null;
 
-// An example query for testing wacRead:
-
-testQuery = {
-    startTime: 0,
-    endTime: Math.round(Date.now() / 1000),
-    conditions: [
-        {
-            property: 'Interaction Type',
-            operator: '=',
-            value: 'Signed In'
-        },
-        {
-            property: 'Browser',
-            operator: '!=',
-            value: 'Chrome'
-        },
-        {
-            property: 'User Email',
-            operator: '=',
-            value: 'admin@wearecolony.com'
-        }
-    ]
-};
-
 wacRead = {
     connectionOpen: false,
 
@@ -72,10 +48,14 @@ wacRead = {
             } else {
                 // Local dev
 
-                query = testQuery;
+                testQuery = require('../test-query');
+
+                query = self.validateQuery(testQuery);
             }
         } catch(e) {
             // If errors, response with success false and errors
+
+            console.error(e);
 
             response.errors.push(e);
 
@@ -117,6 +97,12 @@ wacRead = {
 
                 console.log('[wacalytics-read] ' + eventData.totalMatchingEvents + ' event(s) found');
                 console.log('[wacalytics-read] ' + totalEvents + ' event(s) in database');
+
+                if (!process.env.AWS_LAMBDA_FUNCTION_NAME) {
+                    // If running locally
+
+                    console.log(response.toObject());
+                }
 
                 return response.toObject();
             })
@@ -165,6 +151,9 @@ wacRead = {
         try {
             newQuery.startTime      = query.startTime || 0;
             newQuery.endTime        = query.endTime || Date.now();
+            newQuery.userId         = query.userId || '';
+            newQuery.userEmail      = query.userEmail || '';
+            newQuery.name           = query.name || '';
             newQuery.conditions     = query.conditions || [];
             newQuery.resultsPerPage = Math.min(100, query.resultsPerPage || 10);
             newQuery.page           = Math.max(1, query.page || 1);
