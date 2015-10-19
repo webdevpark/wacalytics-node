@@ -4,9 +4,11 @@
   "main": "main.js",
   "description": "",
   "author": "We Are Colony",
+  "private": true,
   "dependencies": {
     "atob": "^1.1.2",
     "aws-sdk": "^2.1.24",
+    "dateformat": "^1.0.11",
     "dynamodb-marshaler": "^1.2.1",
     "mongoose": "^4.1.9",
     "mongoose-pagination": "^1.0.0",

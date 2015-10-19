@@ -3,6 +3,7 @@ var q                      = require('q'),
     sql                    = require('mssql'),
     http                   = require('http'),
     AWS                    = require('aws-sdk'),
+    dateformat             = require('dateformat'),
 
     ec2                    = new AWS.EC2(),
 
@@ -14,7 +15,8 @@ var q                      = require('q'),
     _insertEventProperties = null,
     _addAccessToRds        = null,
     _removeAccessToRds     = null,
-    _getIp                 = null;
+    _getIp                 = null,
+    _timeStampToString     = null;
 
 db = {
     /**
@@ -138,7 +140,12 @@ _insertEventId = function(event) {
         userId = '',
         eventName = '';
 
-    date = '\'' + (event.data.Date || event.date) + ' ' + (event.data.Time || event.time) + '\'';
+    if(!event.data.Date && !event.date && !event.data.Time && !event.time){
+        date = '\'' + _timeStampToString(event.timestamp) + '\'';
+    } else {
+        date = '\'' + (event.data.Date || event.date) + ' ' + (event.data.Time || event.time) + '\'';
+    }
+
     ipAddress = '\'' + event.ipAddress + '\'';
     awsEventId = '\'' + event._id + '\'';
     userId = '\'' + event.data.User_ID + '\'';
@@ -161,6 +168,12 @@ _insertEventId = function(event) {
     });
 
     return defered.promise;
+};
+
+_timeStampToString = function(timestamp) {
+    var date = new Date(timestamp*1000);
+
+    return dateformat(date, "yyyy-mm-dd HH:MM:ss");
 };
 
 _insertEventProperties = function(data, eventId) {
@@ -214,8 +227,12 @@ _addAccessToRds = function() {
 
     ec2.authorizeSecurityGroupIngress(params, function(err, data) {
         if (err) {
-            console.log(err, err.stack);
-            defered.reject(err);
+            console.log("code: ", err.code);
+            if (err.code == "InvalidPermission.Duplicate") {
+                defered.resolve();
+            } else {
+                defered.reject(err);
+            }
         } else {
             console.log('[wacalytics] Added RDS Acess for ip ' + ip.toString(), data);
             defered.resolve();
