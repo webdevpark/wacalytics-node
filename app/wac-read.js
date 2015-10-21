@@ -157,6 +157,7 @@ wacRead = {
             newQuery.conditions     = query.conditions || [];
             newQuery.resultsPerPage = Math.min(100, query.resultsPerPage || 10);
             newQuery.page           = Math.max(1, query.page || 1);
+            newQuery.ipAddress      = query.ipAddress || '';
         } catch(e) {
             console.warn('[wacalytics-read] WARNING: The provided query was invalid');
 
