@@ -145,6 +145,10 @@ _buildMongoQuery = function(query) {
         mongoQuery.userEmail = query.userEmail;
     }
 
+    if (query.ipAddress) {
+        mongoQuery.ipAddress = query.ipAddress;
+    }
+
     if (query.name) {
         // TODO: "eventName" might be clearer, but would require a db schema change
 

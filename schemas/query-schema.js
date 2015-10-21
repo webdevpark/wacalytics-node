@@ -7,6 +7,7 @@ var querySchema = {
     page: -1,
     startTime: -1,
     endTime: -1,
+    ipAddress: '',
     userId: '',
     userEmail: '',
     name: '',
